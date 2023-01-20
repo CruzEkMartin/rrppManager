@@ -132,11 +132,11 @@
         
  <script>        
         
-        Swal.fire(
-  'The Internet?',
-  'That thing is still around?',
-  'question'
-)
+//         Swal.fire(
+//   'The Internet?',
+//   'That thing is still around?',
+//   'question'
+// )
     
             </script>
     </body>

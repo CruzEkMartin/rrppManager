@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,10 +8,15 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css" />
+    
+    @yield('css')
+
     <title>{{ config('app.name', 'rrppManager') }}</title>
 
     <!-- Scripts -->
-         <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script> 
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -25,17 +31,19 @@
         }
 
         .navbar {
-            background: #AB0A3D; /*#009DC7;*/
+            background: #AB0A3D;
+            /*#009DC7;*/
         }
 
         .card-title {
-            background: #440412; /* #009DC7;*/
+            background: #440412;
+            /* #009DC7;*/
             text-align: center;
             color: white;
             font-size: 24px;
         }
 
-       
+
         input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
             -webkit-appearance: none;
@@ -76,120 +84,123 @@
             border-bottom: none;
         }
 
- input[type="radio"] {
-     position: absolute;
-     left: -9999px
- }
+        input[type="radio"] {
+            position: absolute;
+            left: -9999px
+        }
 
- input[type="radio"]+label {
-     position: relative;
-     padding: 3px 0 0 40px;
-     cursor: pointer
- }
+        input[type="radio"]+label {
+            position: relative;
+            padding: 3px 0 0 40px;
+            cursor: pointer
+        }
 
- input[type="radio"]+label:before {
-     content: '';
-     background: #fff;
-     border: 2px solid #bbb;
-     height: 25px;
-     width: 25px;
-     border-radius: 50%;
-     position: absolute;
-     top: 0;
-     left: 0
- }
+        input[type="radio"]+label:before {
+            content: '';
+            background: #fff;
+            border: 2px solid #bbb;
+            height: 25px;
+            width: 25px;
+            border-radius: 50%;
+            position: absolute;
+            top: 0;
+            left: 0
+        }
 
- input[type="radio"]+label:after {
-     content: '';
-     background: #B68400; /* #009DC7;*/
-     width: 15px;
-     height: 15px;
-     border-radius: 50%;
-     position: absolute;
-     top: 5px;
-     left: 5px;
-     opacity: 0;
-     transform: scale(2);
-     transition: transform 0.3s linear, opacity 0.3s linear
- }
+        input[type="radio"]+label:after {
+            content: '';
+            background: #B68400;
+            /* #009DC7;*/
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            opacity: 0;
+            transform: scale(2);
+            transition: transform 0.3s linear, opacity 0.3s linear
+        }
 
- input[type="radio"]:checked+label:after {
-     opacity: 1;
-     transform: scale(1)
- }
+        input[type="radio"]:checked+label:after {
+            opacity: 1;
+            transform: scale(1)
+        }
 
 
 
- input[type="checkbox"] {
-     position: absolute;
-     left: -9999px
- }
+        input[type="checkbox"] {
+            position: absolute;
+            left: -9999px
+        }
 
- input[type="checkbox"]+label {
-     position: relative;
-     padding: 3px 0 0 40px;
-     cursor: pointer;
-     color: rgb(120, 119, 121)
- }
+        input[type="checkbox"]+label {
+            position: relative;
+            padding: 3px 0 0 40px;
+            cursor: pointer;
+            color: rgb(120, 119, 121)
+        }
 
- input[type="checkbox"]+label:before {
-     content: '';
-     background: #fff;
-     border: 2px solid #ccc;
-     border-radius: 3px;
-     height: 25px;
-     width: 25px;
-     position: absolute;
-     top: 0;
-     left: 0
- }
+        input[type="checkbox"]+label:before {
+            content: '';
+            background: #fff;
+            border: 2px solid #ccc;
+            border-radius: 3px;
+            height: 25px;
+            width: 25px;
+            position: absolute;
+            top: 0;
+            left: 0
+        }
 
- input[type="checkbox"]+label:after {
-     content: '';
-     border-style: solid;
-     border-width: 0 0 2px 2px;
-     border-color: transparent transparent #311B92 #311B92;
-     width: 15px;
-     height: 8px;
-     position: absolute;
-     top: 6px;
-     left: 5px;
-     opacity: 0;
-     transform: scale(2) rotate(-45deg);
-     transition: transform 0.3s linear, opacity 0.3s linear
- }
+        input[type="checkbox"]+label:after {
+            content: '';
+            border-style: solid;
+            border-width: 0 0 2px 2px;
+            border-color: transparent transparent #311B92 #311B92;
+            width: 15px;
+            height: 8px;
+            position: absolute;
+            top: 6px;
+            left: 5px;
+            opacity: 0;
+            transform: scale(2) rotate(-45deg);
+            transition: transform 0.3s linear, opacity 0.3s linear
+        }
 
- input[type="checkbox"]:checked+label:after {
-     opacity: 1;
-     transform: scale(1) rotate(-45deg);
-     color: #311B92
- }
+        input[type="checkbox"]:checked+label:after {
+            opacity: 1;
+            transform: scale(1) rotate(-45deg);
+            color: #311B92
+        }
 
- label {
-     display: flex;
-     align-items: center
- }
-
+        label {
+            display: flex;
+            align-items: center
+        }
     </style>
 
 </head>
+
 <body>
     <div id="app">
-         <nav class="navbar navbar-expand-md navbar-light shadow-sm">
+        <nav class="navbar navbar-expand-md navbar-light shadow-sm">
             <div class="container">
                 <a class="navbar-brand" style="color: white;" href="{{ url('/') }}">
                     Contactos
                 </a>
 
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-					<span class="navbar-toggler-icon"></span>
-				</button>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="{{ __('Toggle navigation') }}">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
 
-                        
+
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -214,7 +225,7 @@
                                             CATÁLOGOS
                                         </h5>
                                         <li>
-                                            <a class="dropdown-item" href="/admin2022/user">{{ __('Usuarios') }}</a>
+                                            <a class="dropdown-item" href="/usuarios">{{ __('Usuarios') }}</a>
                                         </li>
 
                                         <li>
@@ -251,25 +262,25 @@
 
         </main>
     </div>
-<!--sweetalert-->
-   <script src="{{ asset('js/app.js') }}"></script> 
-    <script>        
+    <!--sweetalert-->
+    <script src="{{ asset('js/app.js') }}"></script>
+    <script>
         function mayusculas(e) {
             e.value = e.value.toUpperCase();
         }
-        
-        if ( $(".HideAlert").length > 0 ){
-			setTimeout(function() {
-				$(".HideAlert").remove();
-			}, 5000);
-		}
-        
-        Swal.fire({
-  title: 'Error!',
-  text: 'Do you want to continue',
-  icon: 'error',
-  confirmButtonText: 'Cool'
-})
+
+        if ($(".HideAlert").length > 0) {
+            setTimeout(function() {
+                $(".HideAlert").remove();
+            }, 5000);
+        }
+
+        // Swal.fire({
+        //     title: 'Error!',
+        //     text: 'Do you want to continue',
+        //     icon: 'error',
+        //     confirmButtonText: 'Cool'
+        // })
     </script>
 
 
