@@ -20,10 +20,42 @@ class UsuarioController extends Controller
     public function index()
     {
         //
-        $usuarios = User::all();
-       
 
-        return view('usuarios.index', compact('usuarios'));
+        // $draw = intval($this->input->get("draw"));
+        // $start = intval($this->input->get("start"));
+        // $length = intval($this->input->get("length"));
+
+        $usuarios = User::all();
+
+        $data = [];
+
+
+        foreach ($usuarios as $r) {
+            $data[] = array(
+                //"fila"=>$r->fila,
+                "id" => $r->id,
+                "name" => $r->name,
+                "email" => $r->email,
+                "permiso" => $r->permiso,
+                "status" => $r->status
+                
+            );
+        }
+
+
+        $todos = array(
+            "recordsTotal" => count($usuarios),
+            "recordsFiltered" => count($usuarios),
+            "data" => $data
+        );
+
+
+        echo json_encode($todos);
+        return response()->json(['data' => $data]);
+        return;
+
+
+        //return view('usuarios.index', compact('usuarios'));
     }
 
     /**

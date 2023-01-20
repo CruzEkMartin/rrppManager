@@ -73,7 +73,7 @@
         //solicituds de entrega
 
         $(document).ready(function() {
-            $('#tbUsuarios').DataTable({
+            $('#tbUsuarios2').DataTable({
                 language: {
                     url: 'https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-MX.json'
                 },
@@ -114,4 +114,50 @@
                 return false;
         }
     </script>
+
+<script>
+
+
+$(document).ready(function() {
+    $('#tbUsuarios').DataTable({
+        language: {
+            url: 'https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-MX.json'
+        },
+        dom: "<'row'<'col-sm-12 col-md-4'B><'col-sm-12 col-md-4'l><'col-sm-12 col-md-4'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+        responsive: true,
+        ajax: {"{{ route('Usuarios.Index')}}",
+        type: 'POST'
+    }
+        columns: [
+            {
+                data: 'id'
+            },
+            {
+                data: 'name'
+            },
+            {
+                data: 'email'
+            },
+            {
+                data: 'permiso'
+            },
+            {
+                data: 'status'
+            }
+        ],
+        buttons: [
+        {
+            extend: 'excel',
+                    footer: true,
+                    text: 'Exportar a Excel',
+                    title: '',
+                    filename: 'Reporte de Usuarios ',
+        }
+    ]
+    });
+});
+</script>
+
 @endsection
