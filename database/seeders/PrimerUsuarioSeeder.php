@@ -24,6 +24,7 @@ class PrimerUsuarioSeeder extends Seeder
             "password" => Hash::make($contraseña),
             "name" => "NO BORRAR - Administrador",
             "permiso" => "0",
+            "status" => "1",
         ]);
         $user->saveOrFail();
     }
