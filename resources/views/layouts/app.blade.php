@@ -10,8 +10,7 @@
     <title>{{ config('app.name', 'rrppManager') }}</title>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+         <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script> 
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -252,9 +251,8 @@
 
         </main>
     </div>
-{{-- 
-    <script src="{{ asset('js/app.js') }}"></script>  --}}
-
+<!--sweetalert-->
+   <script src="{{ asset('js/app.js') }}"></script> 
     <script>        
         function mayusculas(e) {
             e.value = e.value.toUpperCase();
@@ -266,11 +264,12 @@
 			}, 5000);
 		}
         
-        Swal.fire(
-  'The Internet?',
-  'That thing is still around?',
-  'question'
-)
+        Swal.fire({
+  title: 'Error!',
+  text: 'Do you want to continue',
+  icon: 'error',
+  confirmButtonText: 'Cool'
+})
     </script>
 
 
