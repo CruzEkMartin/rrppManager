@@ -8,9 +8,10 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css" />
-    
+
     @yield('css')
 
     <title>{{ config('app.name', 'rrppManager') }}</title>
@@ -63,9 +64,37 @@
             color: white !important;
         }
 
-        .dt-button {
-            padding: 0;
-            border: none;
+        button.dt-button:hover {
+            color: black;
+        }
+
+        button.dt-button {
+            position: relative;
+            display: inline-block;
+            box-sizing: border-box;
+            margin-left: 0.167em;
+            margin-right: 0.167em;
+            margin-bottom: 0.333em;
+            padding: 0.375rem 0.75rem;
+            border: 0px solid rgba(0, 0, 0, 0.3);
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            line-height: 1.6em;
+            color: white;
+            white-space: nowrap;
+            overflow: hidden;
+            background-color: rgba(0, 0, 0, 0.1);
+            background: linear-gradient(to top, rgba(45, 149, 87, 0.9) 0%, rgba(56, 193, 114, 1) 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0, StartColorStr="rgba(45, 149, 87, 0.9)", EndColorStr="rgba(56, 193, 114, 1)");
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            text-decoration: none;
+            outline: none;
+            text-overflow: ellipsis;
+            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
         }
 
         fieldset.borde-field {
@@ -264,6 +293,9 @@
     </div>
     <!--sweetalert-->
     <script src="{{ asset('js/app.js') }}"></script>
+
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+    
     <script>
         function mayusculas(e) {
             e.value = e.value.toUpperCase();

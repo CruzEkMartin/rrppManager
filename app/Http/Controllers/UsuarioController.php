@@ -7,56 +7,46 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use DataTables;
 
 use Illuminate\Support\Carbon;
-
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Hash;
 class UsuarioController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Muestra el listado principal de usuarios, invocado desde ajax y retorna un json.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if ($request->ajax()) {
+            //$usuarios = User::all();
+            $usuarios = DB::table('users')
+                ->select(
+                    'id',
+                    'name',
+                    'email',
+                    DB::raw('(CASE permiso WHEN 0 THEN "ADMINISTRADOR" WHEN 1 THEN "CONSULTA" END) AS permiso'),
+                    DB::raw('(CASE status WHEN 0 THEN "INACTIVO" WHEN 1 THEN "ACTIVO" END) AS status'),
+                )
+                ->orderBy('id', 'DESC')
+                ->get();
 
-        // $draw = intval($this->input->get("draw"));
-        // $start = intval($this->input->get("start"));
-        // $length = intval($this->input->get("length"));
-
-        $usuarios = User::all();
-
-        $data = [];
-
-
-        foreach ($usuarios as $r) {
-            $data[] = array(
-                //"fila"=>$r->fila,
-                "id" => $r->id,
-                "name" => $r->name,
-                "email" => $r->email,
-                "permiso" => $r->permiso,
-                "status" => $r->status
-                
-            );
+            return Datatables::of($usuarios)
+                ->addColumn('action', function ($row) {
+                    $html = '<a href="' . route('Usuarios.Editar', $row->id) . '" class="btn btn-sm btn-primary btn-edit"><i class="fa fa-edit mr-2"></i>Editar</a> ';
+                    // $html .= '<button data-rowid="' . $row->id . '" class="btn btn-xs btn-danger btn-delete">Del</button>';
+                    return $html;
+                })->toJson();
         }
 
-
-        $todos = array(
-            "recordsTotal" => count($usuarios),
-            "recordsFiltered" => count($usuarios),
-            "data" => $data
-        );
-
-
-        echo json_encode($todos);
-        return response()->json(['data' => $data]);
-        return;
-
-
-        //return view('usuarios.index', compact('usuarios'));
+        return view('usuarios.index');
     }
+
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -66,8 +56,10 @@ class UsuarioController extends Controller
     public function create()
     {
         //
+        return view('usuarios.createUsuario');
     }
 
+    
     /**
      * Store a newly created resource in storage.
      *
@@ -77,6 +69,44 @@ class UsuarioController extends Controller
     public function store(Request $request)
     {
         //
+        $fecha = Carbon::now();
+        // $fecha = $fecha->subHour(5);
+        //
+        //
+        $validator = Validator::make($request->all(), [
+
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'radio' => ['required', 'bool'],
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator);
+        }
+
+        //inicia la transaccion
+        try {
+            DB::beginTransaction();
+
+            //guardamos la solicitud
+            $usuario = new User();
+            $usuario->name = $request->get('name');
+            $usuario->email = $request->get('email');
+            $usuario->password = Hash::make( $request->get('password'));
+            $usuario->permiso =  $request->get('radio');
+            $usuario->status = $request->has('status') ? "1" : "0";
+            $usuario->save();
+            //si no hay error en la transaccion hacemos commit y redireccionamos correctamente
+            DB::commit();
+            return redirect('/usuarios')->with('scssmsg', 'Se ha guardado correctamente el usuario');
+        } catch (\Exception $e) {
+            //en caso de error hacemos rollback y mandamos mensaje de error
+            DB::rollBack();
+            return Redirect::back()->with('errormsg', 'Ha ocurrido un error al intentar guardar el usuario, intente de nuevo. '. $e);
+        }
+
+        return redirect()->route('Usuarios.Index');
     }
 
     /**
@@ -99,6 +129,9 @@ class UsuarioController extends Controller
     public function edit($id)
     {
         //
+        $usuario = User::find($id);
+
+        return view('usuarios.editUsuario', compact('usuario'));
     }
 
     /**
