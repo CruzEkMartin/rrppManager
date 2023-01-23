@@ -58,7 +58,7 @@
 
                     <div class="input-group mb-3">
                         <span class="input-group-text" id="lblPhone">{{ __('Phone') }}</span>
-                        <input id="phone" type="number" class="form-control @error('phone') is-invalid @enderror"
+                        <input id="phone" type="number" maxlength="10" class="form-control @error('phone') is-invalid @enderror"
                             name="phone" value="{{ old('phone') }}" required autocomplete="phone" aria-label="Teléfono"
                             aria-describedby="lblPhone">
 

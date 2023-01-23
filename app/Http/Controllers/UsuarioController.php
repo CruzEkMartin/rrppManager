@@ -78,7 +78,7 @@ class UsuarioController extends Controller
 
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'phone' => ['required', 'min:10|max:10','regex:/^([0-9\s\-\+\(\)]*)$/'],
+            'phone' => ['required', 'regex:/^([0-9]{10})$/','min:10'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'radio' => ['required', 'bool'],
         ]);
@@ -155,7 +155,7 @@ class UsuarioController extends Controller
         //
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'min:10|max:10','regex:/^([0-9\s\-\+\(\)]*)$/'],
+            'phone' => ['required', 'regex:/^([0-9]{10})$/','min:10'],
             'radio' => ['required', 'bool'],
         ]);
 
