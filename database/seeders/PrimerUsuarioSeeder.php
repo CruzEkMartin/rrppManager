@@ -23,6 +23,7 @@ class PrimerUsuarioSeeder extends Seeder
             "email" => "admin@gmail.com",
             "password" => Hash::make($contraseña),
             "name" => "NO BORRAR - Administrador",
+            "phone" => "9999999999",
             "permiso" => "0",
             "status" => "1",
         ]);

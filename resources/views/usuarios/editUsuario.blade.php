@@ -39,6 +39,21 @@
                     @enderror
                 </div>
 
+                <br>
+
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="lblPhone">{{ __('Phone') }}</span>
+                    <input id="phone" type="number" class="form-control @error('phone') is-invalid @enderror"
+                        name="phone" value="{{ $usuario->phone }}" required aria-label="Teléfono"
+                        aria-describedby="lblPhone">
+
+                    @error('phone')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+
+                </div>
 
                 <br>
 

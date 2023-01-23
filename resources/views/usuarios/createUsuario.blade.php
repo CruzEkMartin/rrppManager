@@ -57,6 +57,22 @@
                     <br>
 
                     <div class="input-group mb-3">
+                        <span class="input-group-text" id="lblPhone">{{ __('Phone') }}</span>
+                        <input id="phone" type="number" class="form-control @error('phone') is-invalid @enderror"
+                            name="phone" value="{{ old('phone') }}" required autocomplete="phone" aria-label="Teléfono"
+                            aria-describedby="lblPhone">
+
+                        @error('phone')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+
+                    </div>
+
+                    <br>
+
+                    <div class="input-group mb-3">
                         <span class="input-group-text" id="lblPassword">{{ __('Password') }} </span>
 
                         <input id="password" type="password" class="form-control @error('password') is-invalid @enderror"

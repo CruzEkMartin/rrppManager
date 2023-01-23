@@ -78,6 +78,7 @@ class UsuarioController extends Controller
 
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'phone' => ['required', 'min:10|max:10','regex:/^([0-9\s\-\+\(\)]*)$/'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'radio' => ['required', 'bool'],
         ]);
@@ -94,6 +95,7 @@ class UsuarioController extends Controller
             $usuario = new User();
             $usuario->name = $request->get('name');
             $usuario->email = $request->get('email');
+            $usuario->phone = $request->get('phone');
             $usuario->password = Hash::make($request->get('password'));
             $usuario->permiso =  $request->get('radio');
             $usuario->status = $request->has('status') ? "1" : "0";
@@ -153,6 +155,7 @@ class UsuarioController extends Controller
         //
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
+            'phone' => ['required', 'min:10|max:10','regex:/^([0-9\s\-\+\(\)]*)$/'],
             'radio' => ['required', 'bool'],
         ]);
 
@@ -169,6 +172,7 @@ class UsuarioController extends Controller
 
             $usuario = User::where('id', $id)->first();
             $usuario->name = $request->get('name');
+            $usuario->phone = $request->get('phone');
             $usuario->permiso =  $request->get('radio');
             $usuario->status = $request->has('status') ? "1" : "0";
             $usuario->save();
