@@ -33,6 +33,7 @@
                             <th>Id</th>
                             <th>Nombre</th>
                             <th>Email</th>
+                            <th>Teléfono</th>
                             <th>Permiso</th>
                             <th>Estatus</th>
                             <th>Acciones</th>
@@ -42,7 +43,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th colspan="6"> </th>
+                            <th colspan="7"> </th>
                         </tr>
                     </tfoot>
                 </table>
@@ -104,6 +105,9 @@
                     },
                     {
                         data: 'email'
+                    },
+                    {
+                        data: 'phone'
                     },
                     {
                         data: 'permiso'

@@ -29,6 +29,7 @@ class UsuarioController extends Controller
                     'id',
                     'name',
                     'email',
+                    'phone',
                     DB::raw('(CASE permiso WHEN 0 THEN "ADMINISTRADOR" WHEN 1 THEN "CONSULTA" END) AS permiso'),
                     DB::raw('(CASE status WHEN 0 THEN "INACTIVO" WHEN 1 THEN "ACTIVO" END) AS status'),
                 )
