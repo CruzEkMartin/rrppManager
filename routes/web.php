@@ -44,11 +44,21 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 // Route::get('/usuarios','\UsuarioController@index')->name('usuarios');
 
-
+//*********catalogo de usuarios */
 Route::group(['namespace' => '\App\Http\Controllers'], function () {
     Route::get('/usuarios', 'UsuarioController@index')->name('Usuarios.Index');
     Route::get('/usuarios/nuevo', 'UsuarioController@create')->name('Usuarios.Nuevo');
     Route::post('/usuarios/nuevo', 'UsuarioController@store')->name('Usuarios.Guardar');
     Route::get('/usuarios/editar/{id}', 'UsuarioController@edit')->name('Usuarios.Editar');
-    Route::post('/usuarios/editar/{id}', 'UsuarioController@update')->name('Usuarios.Update');
+    Route::put('/usuarios/editar/{id}', 'UsuarioController@update')->name('Usuarios.Update');
+});
+
+
+//*********Contactos */
+Route::group(['namespace' => '\App\Http\Controllers'], function () {
+    Route::get('/contactos', 'ContactosController@index')->name('Contactos.Index');
+    Route::get('/contactos/nuevo', 'ContactosController@create')->name('Contactos.Nuevo');
+    Route::post('/contactos/nuevo', 'ContactosController@store')->name('Contactos.Guardar');
+    Route::get('/contactos/editar/{id}', 'ContactosController@edit')->name('Contactos.Editar');
+    Route::put('/contactos/editar/{id}', 'ContactosController@update')->name('Contactos.Update');
 });

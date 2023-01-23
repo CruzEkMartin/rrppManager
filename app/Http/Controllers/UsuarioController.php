@@ -12,6 +12,7 @@ use DataTables;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Hash;
+
 class UsuarioController extends Controller
 {
     /**
@@ -59,7 +60,7 @@ class UsuarioController extends Controller
         return view('usuarios.createUsuario');
     }
 
-    
+
     /**
      * Store a newly created resource in storage.
      *
@@ -93,7 +94,7 @@ class UsuarioController extends Controller
             $usuario = new User();
             $usuario->name = $request->get('name');
             $usuario->email = $request->get('email');
-            $usuario->password = Hash::make( $request->get('password'));
+            $usuario->password = Hash::make($request->get('password'));
             $usuario->permiso =  $request->get('radio');
             $usuario->status = $request->has('status') ? "1" : "0";
             $usuario->save();
@@ -103,7 +104,7 @@ class UsuarioController extends Controller
         } catch (\Exception $e) {
             //en caso de error hacemos rollback y mandamos mensaje de error
             DB::rollBack();
-            return Redirect::back()->with('errormsg', 'Ha ocurrido un error al intentar guardar el usuario, intente de nuevo. '. $e);
+            return Redirect::back()->with('errormsg', 'Ha ocurrido un error al intentar guardar el usuario, intente de nuevo. ' . $e);
         }
 
         return redirect()->route('Usuarios.Index');
@@ -144,6 +145,44 @@ class UsuarioController extends Controller
     public function update(Request $request, $id)
     {
         //
+
+
+        $fecha = Carbon::now();
+        $fecha = $fecha->subHour(5);
+
+        //
+        $validator = Validator::make($request->all(), [
+            'name' => ['required', 'string', 'max:255'],
+            'radio' => ['required', 'bool'],
+        ]);
+
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator);
+        }
+
+        //inicia la transaccion
+        try {
+            DB::beginTransaction();
+
+            //$activo = Input::has('status') ? true : false;
+
+            $usuario = User::where('id', $id)->first();
+            $usuario->name = $request->get('name');
+            $usuario->permiso =  $request->get('radio');
+            $usuario->status = $request->has('status') ? "1" : "0";
+            $usuario->save();
+            //si no hay error en la transaccion hacemos commit y redireccionamos correctamente
+            DB::commit();
+            return redirect('/usuarios')->with('scssmsg', 'Se ha actualizado correctamente el usuario');
+        } catch (\Exception $e) {
+            //en caso de error hacemos rollback y mandamos mensaje de error
+            DB::rollBack();
+            return Redirect::back()->with('errormsg', 'Ha ocurrido un error al intentar actualizar el usuario, intente de nuevo. ' . $e);
+        }
+
+
+        return redirect()->route('Usuarios.Index');
     }
 
     /**

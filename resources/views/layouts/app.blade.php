@@ -8,7 +8,8 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css" />
 
@@ -251,6 +252,17 @@
 
                                     @if (Auth::user()->permiso == 0)
                                         <h5 class="dropdown-header bg-secondary text-white">
+                                            CONTACTOS
+                                        </h5>
+                                        <li>
+                                            <a class="dropdown-item" href="/contactos">{{ __('Contactos') }}</a>
+                                        </li>
+
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+
+                                        <h5 class="dropdown-header bg-secondary text-white">
                                             CATÁLOGOS
                                         </h5>
                                         <li>
@@ -295,7 +307,7 @@
     <script src="{{ asset('js/app.js') }}"></script>
 
     <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
-    
+
     <script>
         function mayusculas(e) {
             e.value = e.value.toUpperCase();
