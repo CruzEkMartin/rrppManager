@@ -268,6 +268,12 @@
                                         <li>
                                             <a class="dropdown-item" href="/usuarios">{{ __('Usuarios') }}</a>
                                         </li>
+                                        <li>
+                                            <a class="dropdown-item" href="/sectores">{{ __('Sectores') }}</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="/categorias">{{ __('Categorías') }}</a>
+                                        </li>
 
                                         <li>
                                             <hr class="dropdown-divider">

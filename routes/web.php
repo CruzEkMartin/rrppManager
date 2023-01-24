@@ -54,6 +54,25 @@ Route::group(['namespace' => '\App\Http\Controllers'], function () {
 });
 
 
+//*********catalogo de sectores */
+Route::group(['namespace' => '\App\Http\Controllers'], function () {
+    Route::get('/sectores', 'SectoresController@index')->name('Sectores.Index');
+    Route::get('/sectores/nuevo', 'SectoresController@create')->name('Sectores.Nuevo');
+    Route::post('/sectores/nuevo', 'SectoresController@store')->name('Sectores.Guardar');
+    Route::get('/sectores/editar/{id}', 'SectoresController@edit')->name('Sectores.Editar');
+    Route::put('/sectores/editar/{id}', 'SectoresController@update')->name('Sectores.Update');
+});
+
+
+//*********catalogo de categorias */
+Route::group(['namespace' => '\App\Http\Controllers'], function () {
+    Route::get('/categorias', 'CategoriasController@index')->name('Categorias.Index');
+    Route::get('/categorias/nuevo', 'CategoriasController@create')->name('Categorias.Nuevo');
+    Route::post('/categorias/nuevo', 'CategoriasController@store')->name('Categorias.Guardar');
+    Route::get('/categorias/editar/{id}', 'CategoriasController@edit')->name('Categorias.Editar');
+    Route::put('/categorias/editar/{id}', 'CategoriasController@update')->name('Categorias.Update');
+});
+
 //*********Contactos */
 Route::group(['namespace' => '\App\Http\Controllers'], function () {
     Route::get('/contactos', 'ContactosController@index')->name('Contactos.Index');

@@ -8,7 +8,7 @@
 @section('content')
     <br>
     <div class="row justify-content-center">
-        <h2>USUARIOS</h2>
+        <h2>Sectores</h2>
     </div>
 
     <br>
@@ -23,18 +23,15 @@
         </script>
     @endif
 
-    <form id="usuarios" action="" method="">
+    <form id="sectores" action="" method="">
 
         <div class="card">
             <div class="card-body">
-                <table class="table table-light table-striped table-hover" id="tbUsuarios">
+                <table class="table table-light table-striped table-hover" id="tbSectores">
                     <thead class="table-dark">
                         <tr>
                             <th>Id</th>
                             <th>Nombre</th>
-                            <th>Email</th>
-                            <th>Teléfono</th>
-                            <th>Permiso</th>
                             <th>Estatus</th>
                             <th>Acciones</th>
                         </tr>
@@ -43,7 +40,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th colspan="7"> </th>
+                            <th colspan="4"> </th>
                         </tr>
                     </tfoot>
                 </table>
@@ -64,7 +61,7 @@
 @section('script')
     <script type="text/javascript">
         $(document).ready(function() {
-            $('#tbUsuarios').DataTable({
+            $('#tbSectores').DataTable({
                 language: {
                     url: 'https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-MX.json'
                 },
@@ -78,7 +75,7 @@
                             text: '<a><i class="fa fa-plus-circle fa-lg"></i> Nuevo</a>',
                             title: '',
                             action: function(e, dt, button, config) {
-                                window.location.href = "{!! route('Usuarios.Nuevo') !!}"
+                                window.location.href = "{!! route('Sectores.Nuevo') !!}"
                             }
 
                         },
@@ -87,31 +84,21 @@
                         footer: true,
                         text: '<a><i class="fa fa-file-excel"></i> Exportar a Excel </a>',
                         title: '',
-                        filename: 'Reporte de Usuarios',
+                        filename: 'Reporte de Sectores',
                     },
 
                 ],
                 processing: true,
                 serverSide: true,
-                responsive: true,
                 aaSorting: [
                     [0, "desc"]
                 ],
-                ajax: "{{ route('Usuarios.Index') }}",
+                ajax: "{{ route('Sectores.Index') }}",
                 columns: [{
                         data: 'id'
                     },
                     {
                         data: 'name'
-                    },
-                    {
-                        data: 'email'
-                    },
-                    {
-                        data: 'phone'
-                    },
-                    {
-                        data: 'permiso'
                     },
                     {
                         data: 'status'
