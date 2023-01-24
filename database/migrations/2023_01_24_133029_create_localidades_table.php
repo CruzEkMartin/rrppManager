@@ -28,6 +28,9 @@ class CreateLocalidadesTable extends Migration
             $table->string('cve_carta');
             $table->boolean('status');
             $table->timestamps();
+
+            $table->index(['cve_ent', 'cve_mun', 'cve_loc']);
+
         });
     }
 

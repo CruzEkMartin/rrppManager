@@ -20,6 +20,8 @@ class CreateEstadosTable extends Migration
             $table->string('nom_abr');
             $table->boolean('status');
             $table->timestamps();
+
+            $table->index(['cve_ent']);
         });
     }
 

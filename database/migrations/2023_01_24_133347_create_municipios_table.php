@@ -20,6 +20,8 @@ class CreateMunicipiosTable extends Migration
             $table->string('nom_mun');
             $table->boolean('status');
             $table->timestamps();
+
+            $table->index(['cve_ent', 'cve_mun']);
         });
     }
 
