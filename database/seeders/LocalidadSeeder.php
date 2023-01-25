@@ -32,9 +32,8 @@ class LocalidadSeeder extends Seeder
                     "longitud" => $data['6'],
                     "lat_decimal" => $data['7'],
                     "lon_decimal" => $data['8'],
-                    "nom_loc" => $data['9'],
-                    "altitud" => $data['10'],
-                    "cve_carta" => $data['11'],
+                    "altitud" => $data['9'],
+                    "cve_carta" => $data['10'],
                     "status" => "1",
                 ]);
             }

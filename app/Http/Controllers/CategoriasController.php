@@ -24,7 +24,7 @@ class CategoriasController extends Controller
         //
         if ($request->ajax()) {
 
-            $categorias = DB::table('categorias')
+            $categorias = DB::table('c_categorias')
                 ->select(
                     'id',
                     'name',

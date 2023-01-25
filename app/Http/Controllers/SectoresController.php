@@ -24,7 +24,7 @@ class SectoresController extends Controller
         //
         if ($request->ajax()) {
 
-            $sectores = DB::table('sectores')
+            $sectores = DB::table('c_sectores')
                 ->select(
                     'id',
                     'name',

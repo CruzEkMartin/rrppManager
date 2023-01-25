@@ -13,7 +13,7 @@ class CreatePartidosTable extends Migration
      */
     public function up()
     {
-        Schema::create('partidos', function (Blueprint $table) {
+        Schema::create('c_partidos', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('siglas');
@@ -29,6 +29,6 @@ class CreatePartidosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('partidos');
+        Schema::dropIfExists('c_partidos');
     }
 }

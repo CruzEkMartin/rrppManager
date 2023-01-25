@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Sector extends Model
 {
     use HasFactory;
-    protected $table = 'sectores';
+    protected $table = 'c_sectores';
 
     protected $fillable = [
         'name', 'status',    ];
