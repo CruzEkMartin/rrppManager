@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSectoresTable extends Migration
+class CreateCPartidosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,10 @@ class CreateSectoresTable extends Migration
      */
     public function up()
     {
-        Schema::create('c_sectores', function (Blueprint $table) {
+        Schema::create('c_partidos', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('siglas');
             $table->boolean('status');
             $table->timestamps();
         });
@@ -28,6 +29,6 @@ class CreateSectoresTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('c_sectores');
+        Schema::dropIfExists('c_partidos');
     }
 }

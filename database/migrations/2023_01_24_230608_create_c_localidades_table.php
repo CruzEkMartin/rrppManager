@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLocalidadesTable extends Migration
+class CreateCLocalidadesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -30,7 +30,6 @@ class CreateLocalidadesTable extends Migration
             $table->timestamps();
 
             $table->index(['cve_ent', 'cve_mun', 'cve_loc']);
-
         });
     }
 

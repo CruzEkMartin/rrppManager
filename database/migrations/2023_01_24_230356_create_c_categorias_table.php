@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEstadosTable extends Migration
+class CreateCCategoriasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,11 @@ class CreateEstadosTable extends Migration
      */
     public function up()
     {
-        Schema::create('c_estados', function (Blueprint $table) {
+        Schema::create('c_categorias', function (Blueprint $table) {
             $table->id();
-            $table->string('cve_ent');
-            $table->string('nom_ent');
-            $table->string('nom_abr');
+            $table->string('name');
             $table->boolean('status');
             $table->timestamps();
-
-            $table->index(['cve_ent']);
         });
     }
 
@@ -32,6 +28,6 @@ class CreateEstadosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('c_estados');
+        Schema::dropIfExists('c_categorias');
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMunicipiosTable extends Migration
+class CreateCSectoresTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,11 @@ class CreateMunicipiosTable extends Migration
      */
     public function up()
     {
-        Schema::create('c_municipios', function (Blueprint $table) {
+        Schema::create('c_sectores', function (Blueprint $table) {
             $table->id();
-            $table->string('cve_ent');
-            $table->string('cve_mun');
-            $table->string('nom_mun');
+            $table->string('name');
             $table->boolean('status');
             $table->timestamps();
-
-            $table->index(['cve_ent', 'cve_mun']);
         });
     }
 
@@ -32,6 +28,6 @@ class CreateMunicipiosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('c_municipios');
+        Schema::dropIfExists('c_sectores');
     }
 }
