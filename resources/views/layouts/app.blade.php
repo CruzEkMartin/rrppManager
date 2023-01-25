@@ -274,6 +274,9 @@
                                         <li>
                                             <a class="dropdown-item" href="/categorias">{{ __('Categorías') }}</a>
                                         </li>
+                                        <li>
+                                            <a class="dropdown-item" href="/partidos">{{ __('Partidos') }}</a>
+                                        </li>
 
                                         <li>
                                             <hr class="dropdown-divider">

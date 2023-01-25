@@ -8,7 +8,7 @@
 @section('content')
     <br>
     <div class="row justify-content-center">
-        <h2>PARTIDOS</h2>
+        <h2>CONTACTOS</h2>
     </div>
 
     <br>
@@ -23,17 +23,24 @@
         </script>
     @endif
 
-    <form id="partidos" action="" method="">
+    <form id="contactos" action="" method="">
 
         <div class="card">
             <div class="card-body">
-                <table class="table table-light table-striped table-hover" id="tbPartidos">
+                <table class="table table-light table-striped table-hover" id="tbContactos">
                     <thead class="table-dark">
                         <tr>
                             <th>Id</th>
-                            <th>Nombre</th>
-                            <th>Siglas</th>
-                            <th>Estatus</th>
+                            <th>Titulo</th>
+                            <th>Nombre Completo</th>
+                            <th>Cargo</th>
+                            <th>Área</th>
+                            <th>Dependencia</th>
+                            <th>Fecha Nacimiento</th>
+                            <th>Teléfono Celular</th>
+                            <th>Teléfono Oficina</th>
+                            <th>Email Laboral</th>
+                            <th>Email Personal</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -41,7 +48,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th colspan="5"> </th>
+                            <th colspan="12"> </th>
                         </tr>
                     </tfoot>
                 </table>
@@ -62,7 +69,7 @@
 @section('script')
     <script type="text/javascript">
         $(document).ready(function() {
-            $('#tbPartidos').DataTable({
+            $('#tbContactos').DataTable({
                 language: {
                     url: 'https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-MX.json'
                 },
@@ -76,7 +83,7 @@
                             text: '<a><i class="fa fa-plus-circle fa-lg"></i> Nuevo</a>',
                             title: '',
                             action: function(e, dt, button, config) {
-                                window.location.href = "{!! route('Partidos.Nuevo') !!}"
+                                window.location.href = "{!! route('Contactos.Nuevo') !!}"
                             }
 
                         },
@@ -85,7 +92,7 @@
                         footer: true,
                         text: '<a><i class="fa fa-file-excel"></i> Exportar a Excel </a>',
                         title: '',
-                        filename: 'Reporte de Partidos',
+                        filename: 'Reporte de Contactos',
                     },
 
                 ],
@@ -93,20 +100,41 @@
                 serverSide: true,
                 responsive: true,
                 aaSorting: [
-                    [0, "asc"]
+                    [0, "desc"]
                 ],
-                ajax: "{{ route('Partidos.Index') }}",
+                ajax: "{{ route('Contactos.Index') }}",
                 columns: [{
                         data: 'id'
                     },
                     {
-                        data: 'name'
+                        data: 'titulo'
                     },
                     {
-                        data: 'siglas'
+                        data: 'nombre_completo'
                     },
                     {
-                        data: 'status'
+                        data: 'cargo'
+                    },
+                    {
+                        data: 'area'
+                    },
+                    {
+                        data: 'dependencia'
+                    },
+                    {
+                        data: 'fecha_nacimiento'
+                    },
+                    {
+                        data: 'telefono_celular'
+                    },
+                    {
+                        data: 'telefono_oficina'
+                    },
+                    {
+                        data: 'email_laboral'
+                    },
+                    {
+                        data: 'email_personal'
                     },
                     {
                         data: 'action',

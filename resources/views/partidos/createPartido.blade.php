@@ -4,7 +4,7 @@
     <br><br>
 
     @if (Auth::check() && Auth::user()->permiso == 0)
-        <form action="{{ route('Usuarios.Guardar') }}" method="POST">
+        <form action="{{ route('Partidos.Guardar') }}" method="POST">
             @csrf
 
             @if (session('errormsg'))
@@ -20,7 +20,7 @@
 
 
             <div class="card">
-                <h4 class="card-header">Nuevo Usuario</h4>
+                <h4 class="card-header">Nuevo Partido</h4>
                 <div class="card-body">
                     <br>
 
@@ -28,7 +28,7 @@
                         <span class="input-group-text" id="lblNombre">{{ __('Name') }}</span>
                         <input id="name" type="text" class="form-control @error('name') is-invalid @enderror"
                             name="name" value="{{ old('name') }}" required autocomplete="name" autofocus
-                            onkeyup="mayusculas(this);" aria-label="Nombre del usuario" aria-describedby="lblNombre">
+                            onkeyup="mayusculas(this);" aria-label="Nombre del Partido" aria-describedby="lblNombre">
 
                         @error('name')
                             <span class="invalid-feedback" role="alert">
@@ -41,26 +41,10 @@
                     <br>
 
                     <div class="input-group mb-3">
-                        <span class="input-group-text" id="lblEmail">{{ __('Email Address') }}</span>
-                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror"
-                            name="email" value="{{ old('email') }}" required autocomplete="email" aria-label="Email"
-                            aria-describedby="lblEmail">
-
-                        @error('email')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-
-                    </div>
-
-                    <br>
-
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="lblPhone">Teléfono Celular</span>
-                        <input id="phone" type="number" maxlength="10" class="form-control @error('phone') is-invalid @enderror"
-                            name="phone" value="{{ old('phone') }}" required autocomplete="phone" aria-label="Teléfono"
-                            aria-describedby="lblPhone">
+                        <span class="input-group-text" id="lblSiglas">Siglas</span>
+                        <input id="siglas" type="text" class="form-control @error('siglas') is-invalid @enderror"
+                            name="siglas" value="{{ old('siglas') }}" required autocomplete="siglas" aria-label="Siglas"
+                            aria-describedby="lblSiglas">
 
                         @error('phone')
                             <span class="invalid-feedback" role="alert">
@@ -69,49 +53,6 @@
                         @enderror
 
                     </div>
-
-                    <br>
-
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="lblPassword">{{ __('Password') }} </span>
-
-                        <input id="password" type="password" class="form-control @error('password') is-invalid @enderror"
-                            name="password" required autocomplete="new-password" aria-label="Password"
-                            aria-describedby="lblPassword">
-
-                        @error('password')
-                            <span class="invalid-feedback" role="alert">
-                                <strong>{{ $message }}</strong>
-                            </span>
-                        @enderror
-                    </div>
-
-                    <br>
-
-                    <div class="input-group mb-3">
-                        <span class="input-group-text" id="lblPassword-confirm">{{ __('Confirm Password') }} </span>
-
-                        <input id="password-confirm" type="password" class="form-control" name="password_confirmation"
-                            required autocomplete="new-password" aria-label="Password Confirm"
-                            aria-describedby="lblPassword-confirm">
-                    </div>
-
-                    <br>
-
-                    <div class="row ">
-                        <div class="col-md-12">
-                            <div class="input-group mb-3 align-items-center">
-                                <span class="input-group-text" id="lblPermiso">Permiso: </span>
-                                <div class="form-inline">
-                                    <input type="radio" name="radio" id="radio1" checked="true" value="0" />
-                                    <label class="radio ml-3" for="radio1">ADMINISTRADOR</label>
-                                    <input type="radio" name="radio" id="radio2" value="1" /> <label
-                                        class="radio ml-3" for="radio2">CONSULTA</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
 
                     <br>
 
@@ -126,7 +67,7 @@
                 <div class="card-footer">
                     <div class="col-md-6 col-lg-4 col-xl-3 btn-toolbar justify-content-around " role="toolbar">
                         <div class="btn-group mr-2" role="group">
-                            <a href="{{ route('Usuarios.Index') }}" class="btn btn-secondary"><i
+                            <a href="{{ route('Partidos.Index') }}" class="btn btn-secondary"><i
                                     class="fa fa-times-circle fa-lg mr-1"></i> Cancelar</a>
                         </div>
                         <div class="btn-group mr-2" role="group">

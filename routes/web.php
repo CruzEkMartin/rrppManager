@@ -73,6 +73,16 @@ Route::group(['namespace' => '\App\Http\Controllers'], function () {
     Route::put('/categorias/editar/{id}', 'CategoriasController@update')->name('Categorias.Update');
 });
 
+//*********catalogo de partidos */
+Route::group(['namespace' => '\App\Http\Controllers'], function () {
+    Route::get('/partidos', 'PartidosController@index')->name('Partidos.Index');
+    Route::get('/partidos/nuevo', 'PartidosController@create')->name('Partidos.Nuevo');
+    Route::post('/partidos/nuevo', 'PartidosController@store')->name('Partidos.Guardar');
+    Route::get('/partidos/editar/{id}', 'PartidosController@edit')->name('Partidos.Editar');
+    Route::put('/partidos/editar/{id}', 'PartidosController@update')->name('Partidos.Update');
+});
+
+
 //*********Contactos */
 Route::group(['namespace' => '\App\Http\Controllers'], function () {
     Route::get('/contactos', 'ContactosController@index')->name('Contactos.Index');
