@@ -26,6 +26,9 @@ class CreateCLocalidadesTable extends Migration
             $table->string('lon_decimal');
             $table->string('altitud');
             $table->string('cve_carta');
+            $table->integer('pob_total');
+            $table->integer('pob_masculina');
+            $table->integer('pob_femenina');
             $table->boolean('status');
             $table->timestamps();
 

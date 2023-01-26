@@ -34,6 +34,9 @@ class LocalidadSeeder extends Seeder
                     "lon_decimal" => $data['8'],
                     "altitud" => $data['9'],
                     "cve_carta" => $data['10'],
+                    "pob_total" => $data['11'],
+                    "pob_masculina" => $data['12'],
+                    "pob_femenina" => $data['13'],
                     "status" => "1",
                 ]);
             }
