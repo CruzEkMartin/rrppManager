@@ -32,9 +32,9 @@ class CreateContactosTable extends Migration
             $table->string('asistente')->nullable();
             $table->string('domicilio_laboral')->nullable();
             $table->integer('codigo_postal')->nullable();
-            $table->integer('idEstado')->nullable();
-            $table->integer('idMunicipio')->nullable();
-            $table->integer('idLocalidad')->nullable();
+            $table->string('cve_ent')->nullable();
+            $table->string('cve_mun')->nullable();
+            $table->string('cve_loc')->nullable();
             $table->string('email_laboral')->nullable();
             $table->string('email_personal');
             $table->integer('idPartido')->nullable();

@@ -17,23 +17,28 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
-    public const HOME = '/home';
+    public const HOME = '/contactos';
 
     /**
      * Define your route model bindings, pattern filters, etc.
      *
      * @return void
      */
+
+    protected $namespace = 'App\Http\Controllers'; // need to add in Laravel 8
+
     public function boot()
     {
         $this->configureRateLimiting();
 
         $this->routes(function () {
             Route::middleware('web')
+            ->namespace($this->namespace) // need to add in Laravel 8
                 ->group(base_path('routes/web.php'));
 
             Route::prefix('api')
                 ->middleware('api')
+                ->namespace($this->namespace) // need to add in Laravel 8
                 ->group(base_path('routes/api.php'));
         });
     }

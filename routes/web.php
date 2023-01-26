@@ -91,3 +91,10 @@ Route::group(['namespace' => '\App\Http\Controllers'], function () {
     Route::get('/contactos/editar/{id}', 'ContactosController@edit')->name('Contactos.Editar');
     Route::put('/contactos/editar/{id}', 'ContactosController@update')->name('Contactos.Update');
 });
+
+
+//*********AJAX */
+Route::group(['namespace' => '\App\Http\Controllers'], function () {
+    Route::post('/obtenerMunicipios', 'QueriesController@obtenerMunicipios')->name('Queries.ObtenerMunicipios');
+    Route::post('/obtenerLocalidades', 'QueriesController@obtenerLocalidades')->name('Queries.ObtenerLocalidades');
+});

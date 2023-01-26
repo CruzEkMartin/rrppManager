@@ -54,7 +54,7 @@
             <div class="card-footer">
                 <div class="col-md-6 col-lg-4 col-xl-3 btn-toolbar justify-content-around " role="toolbar">
                     <div class="btn-group mr-2" role="group">
-                        <a href="{{ route('Partido.Index') }}" class="btn btn-secondary"> Cancelar</a>
+                        <a href="{{ route('Partidos.Index') }}" class="btn btn-secondary"> Cancelar</a>
 
 
                         
