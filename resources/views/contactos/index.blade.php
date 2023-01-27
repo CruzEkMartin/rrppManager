@@ -14,12 +14,12 @@
     <br>
 
     @if (session('scssmsg'))
-    <script>
-         Swal.fire(
-      'Guardado!',
-      '{{ session("scssmsg") }}',
-      'success'
-    )
+        <script>
+            Swal.fire(
+                'Guardado!',
+                '{{ session('scssmsg') }}',
+                'success'
+            )
         </script>
     @endif
 
@@ -55,10 +55,50 @@
             </div>
         </div>
     </form>
+
+    <div class="modal fade" id="VerContacto" tabindex="-1" role="dialog" aria-labelledby="VerContactoLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title" id="VerContactoLabel"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4 foto">
+                            {{-- foto --}}
+                        </div>
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="col-md-4">
+
+                                    
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text" id="lblNombre">{{ __('Name') }}</span>
+                                        <input id="name" type="text" class="form-control name="name"
+                                            onkeyup="mayusculas(this);" readonly aria-label="Nombre del usuario"
+                                            aria-describedby="lblNombre">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" data-btn="cnl">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('js')
-    <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    {{-- <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.js"></script> --}}
     <script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap4.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.2/js/dataTables.buttons.min.js"></script>
@@ -68,7 +108,52 @@
 
 @section('script')
     <script type="text/javascript">
+        $(document).on('click', '.btn-edit-plan', function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            var id = $(this).data('id');
+            console.log(id);
+            // ajax
+            $.ajax({
+                type: "POST",
+                url: "{{ url('verContacto') }}",
+                data: {
+                    id: id
+                },
+                dataType: 'json',
+                success: function(res) {
+                    $("#VerContacto").modal('show');
+                    {{ url('images/profile/') }}
+                    var htmlfoto = '<img src="'{{ asset('res.foto') }}'" id="foto" name="foto" alt="Fotografia" class="img-thumbnail">';
+                    $("#VerContacto .foto").html(htmlfoto);
+                    //$('#foto').html('<img src="' + res.foto + '" alt="" class="responsive-img" style="height: 132px; width: 132px;">');
+                   // $('#foto').url(res.foto);
+                    $('#name').val(res.nombre_completo);
+                }
+            });
+        });
+
+
+
         $(document).ready(function() {
+
+            //*** MODAL ***//
+            // $(document).on('click', '.btnshow', function() {
+
+            //                 $("#ModalVer .modal-title").html('Ver Contacto');
+            //                 $("#ModalVer .modal-dialog").addClass('modal-lg');
+
+
+            //                 $("#ModalVer").modal('show');
+            //             });
+
+
+
+            //*** DATATABLE***///
+
             $('#tbContactos').DataTable({
                 language: {
                     url: 'https://cdn.datatables.net/plug-ins/1.11.5/i18n/es-MX.json'

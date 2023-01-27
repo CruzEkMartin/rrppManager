@@ -85,11 +85,15 @@ class ContactosController extends Controller
 
             return Datatables::of($contactos)
                 ->addColumn('action', function ($row) {
-                    $html = '<a href="' . route('Contactos.Editar', $row->id) . '" class="btn btn-sm btn-primary btn-edit"><i class="fa fa-edit mr-2"></i>Editar</a> ';
+        //            $html = '<a href="#" aria-pressed="true" class="btn btn-sm btn-success btnshow"><i class="fa fa-eye mr-2"></i>Ver</a> <a href="' . route('Contactos.Editar', $row->id) . '" class="btn btn-sm btn-primary btn-edit"><i class="fa fa-edit mr-2"></i>Editar</a> ';
+        $html = '<a href="javascript:void(0)" class="btn btn-sm btn-success edit btn-edit-plan" data-id="'. $row->id . '"><i class="fa fa-eye mr-2"></i>Ver</a>  <a href="' . route('Contactos.Editar', $row->id) . '" class="btn btn-sm btn-primary btn-edit"><i class="fa fa-edit mr-2"></i>Editar</a>';
+       // $html = '<button data-name="'. $row->id . '" class="btn  btn-sm btn-success btnshow" type="button" data-toggle="modal" data-target="#VerContacto" aria-pressed="true"><span style="font-size: 1.2em; color: white;" class="fa fa-eye mr-2"></span>Ver</button> <a href="' . route('Contactos.Editar', $row->id) . '" class="btn btn-sm btn-primary btn-edit"><i class="fa fa-edit mr-2"></i>Editar</a> ';
                     // $html .= '<button data-rowid="' . $row->id . '" class="btn btn-xs btn-danger btn-delete">Del</button>';
                     return $html;
                 })->make(true); //->toJson();
         }
+
+        
 
         //ValidationExpression="^([0-9]+){10}$">
         return view('contactos.index');
@@ -148,8 +152,8 @@ class ContactosController extends Controller
                     'ddlLocalidad' => ['required', 'string'],
                     'telefono_celular' => ['required', 'integer','digits:10'],
                     'telefono_oficina' => ['required', 'integer','digits:10'],
-                    'email_personal' => ['required', 'email:rfc,dns'],
-                    'email_laboral' => ['required', 'email:rfc,dns'],
+                    'email_personal' => ['required', 'email'],
+                    'email_laboral' => ['required', 'email'],
                     'ddlPartido' => ['required', 'integer'],
                 ])->validate();
             }
@@ -175,8 +179,8 @@ class ContactosController extends Controller
                     'ddlLocalidad' => ['required', 'string'],
                     'telefono_celular' => ['required', 'integer','digits:10'],
                     'telefono_oficina' => ['required', 'integer','digits:10'],
-                    'email_personal' => ['required', 'email:rfc,dns'],
-                    'email_laboral' => ['required', 'email:rfc,dns'],
+                    'email_personal' => ['required', 'email'],
+                    'email_laboral' => ['required', 'email'],
                     'ddlPartido' => ['required', 'integer'],
                     'ContactoFile' => ['file','mimes:jpg,jpeg,pdf,png', ' required', 'max:3072'],
                 ])->validate();

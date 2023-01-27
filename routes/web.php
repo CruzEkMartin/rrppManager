@@ -86,6 +86,7 @@ Route::group(['namespace' => '\App\Http\Controllers'], function () {
 //*********Contactos */
 Route::group(['namespace' => '\App\Http\Controllers'], function () {
     Route::get('/contactos', 'ContactosController@index')->name('Contactos.Index');
+    Route::get('/contactos/ver/{id}', 'ContactosController@show')->name('Contactos.Ver');
     Route::get('/contactos/nuevo', 'ContactosController@create')->name('Contactos.Nuevo');
     Route::post('/contactos/nuevo', 'ContactosController@store')->name('Contactos.Guardar');
     Route::get('/contactos/editar/{id}', 'ContactosController@edit')->name('Contactos.Editar');
@@ -97,4 +98,5 @@ Route::group(['namespace' => '\App\Http\Controllers'], function () {
 Route::group(['namespace' => '\App\Http\Controllers'], function () {
     Route::post('/obtenerMunicipios', 'QueriesController@obtenerMunicipios')->name('Queries.ObtenerMunicipios');
     Route::post('/obtenerLocalidades', 'QueriesController@obtenerLocalidades')->name('Queries.ObtenerLocalidades');
+    Route::post('/verContacto', 'QueriesController@obtenerContacto')->name('Queries.ObtenerContacto');
 });

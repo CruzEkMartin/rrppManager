@@ -27,6 +27,11 @@ class PartidoSeeder extends Seeder
         DB::table('c_partidos')->insert([
 
             [
+                'name' => 'SIN FILIACIÓN',
+                'siglas' => 'N/A',
+                'status' => '1',
+            ],
+            [
                 'name' => 'Partido Acción Nacional',
                 'siglas' => 'PAN',
                 'status' => '1',

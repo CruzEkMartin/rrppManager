@@ -421,7 +421,7 @@
 
                     <div class="form-row mb-3">
 
-                        <div class="col-md-10">
+                        <div class="col-md-10 mb-3">
                             <div class="custom-file">
                                 <input type="file" class="custom-file-input" id="ContactoFile" name="ContactoFile"
                                     name="ContactoFile" accept="image/png, image/jpg, image/jpeg, application/pdf"
@@ -430,7 +430,7 @@
                                     archivo con la fotografía del contacto</label>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-2 mb-3">
                             <button data-name="ContactoFile" class="btn btn-success btncamera" type="button"
                                 aria-pressed="true"><span style="font-size: 1.2em; color: white;"
                                     class="fa fa-camera mr-2"></span>Tomar Fotografía</button>
