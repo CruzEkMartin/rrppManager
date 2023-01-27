@@ -70,6 +70,7 @@ class QueriesController extends Controller
                 ->where('cve_ent', '=', $request->cve_ent)
                 ->where('cve_mun', '=', $request->cve_mun)
                 ->where('status', "1")
+                ->orderBy('pob_total','desc')
                 ->get();
 
             //retornamos los valores de la consulta

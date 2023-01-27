@@ -4,7 +4,7 @@
     <br><br>
 
     @if (Auth::check() && Auth::user()->permiso == 0)
-        <form action="{{ route('Contactos.Guardar') }}" method="POST">
+        <form action="{{ route('Contactos.Guardar') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             @if (session('errormsg'))
@@ -23,19 +23,26 @@
                 <h4 class="card-header">Nuevo Contacto</h4>
                 <div class="card-body">
                     <br>
+
                     {{-- sector, categoria --}}
                     <div class="row">
                         <div class="col-md-4">
                             <div class="input-group mb-3">
                                 <span class="input-group-text" id="lblSector">{{ __('Sector') }}</span>
                                 <select id="ddlSector" name="ddlSector" aria-describedby="lblsector" class="form-control"
-                                    required>
-                                    <option value="" selected>Seleccione una opcion</option>
+                                    required autofocus>
+                                    <option value="" selected>Seleccione una opción</option>
                                     @foreach ($sectores as $sector)
                                         <option value="{{ $sector->id }}">{{ $sector->name }}
                                         </option>
                                     @endforeach
                                 </select>
+
+                                @error('ddlSector')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
                         </div>
 
@@ -44,7 +51,7 @@
                                 <span class="input-group-text" id="lblCategoria">{{ __('Categoría') }}</span>
                                 <select id="ddlCategoria" name="ddlCategoria" aria-describedby="lblCategoria"
                                     class="form-control" required>
-                                    <option value="" selected>Seleccione una opcion</option>
+                                    <option value="" selected>Seleccione una opción</option>
                                     @foreach ($categorias as $categoria)
                                         <option value="{{ $categoria->id }}">{{ $categoria->name }}
                                         </option>
@@ -245,171 +252,316 @@
                                 <span class="input-group-text" id="lblCP">{{ __('Código Postal') }}</span>
                                 <input type="number" id="CodPostal" name="CodPostal" maxlength="5"
                                     value="{{ old('CodPostal') }}"
-                                    class="form-control @error('CodPostal') is-invalid @enderror" " aria-label="Código Postal"
-                                        aria-describedby="lblCP" required autocomplete="CodPostal" autofocus>
+                                    class="form-control @error('CodPostal') is-invalid @enderror"
+                                    aria-label="Código Postal" aria-describedby="lblCP" required autocomplete="CodPostal"
+                                    autofocus>
 
-                                        @error('CodPostal')
-        <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-    @enderror
-                                </div>
+                                @error('CodPostal')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                    </div>
+
+                    {{--  estado, municipio, localidad --}}
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="lblEstado">{{ __('Estado') }}</span>
+                                <select id="ddlEstado" name="ddlEstado" aria-describedby="lblEstado"
+                                    class="form-control" required>
+                                    <option value="" selected>Seleccione una opción</option>
+                                    @foreach ($estados as $estado)
+                                        <option value="{{ $estado->cve_ent }}">{{ $estado->nom_ent }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="input-group mb-3 ">
+                                <span class="input-group-text" id="lblMunicipio">{{ __('Municipio') }}</span>
+                                <select id="ddlMunicipio" class="form-control" name="ddlMunicipio" disabled required>
+                                </select>
                             </div>
 
                         </div>
 
-                        {{--  estado, municipio, localidad --}}
-
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="input-group mb-3">
-                                    <span class="input-group-text" id="lblEstado">{{ __('Estado') }}</span>
-                                    <select id="ddlEstado" name="ddlEstado" aria-describedby="lblEstado"
-                                        class="form-control" required>
-                                        <option value="" selected>Seleccione una opcion</option>
-                                         @foreach ($estados as $estado)
-                                <option value="{{ $estado->cve_ent }}">{{ $estado->nom_ent }}
-                                </option>
-    @endforeach
-    </select>
-    </div>
-    </div>
-
-    <div class="col-md-4">
-        <div class="input-group mb-3 ">
-            <span class="input-group-text" id="lblMunicipio">{{ __('Municipio') }}</span>
-            <select id="ddlMunicipio" class="form-control" name="ddlMunicipio" disabled required>
-            </select>
-        </div>
+                        <div class="col-md-4">
+                            <div class="input-group mb-3 ">
+                                <span class="input-group-text" id="lblLocalidad">{{ __('Localidad') }}</span>
+                                <select id="ddlLocalidad" class="form-control" name="ddlLocalidad" disabled required>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
 
 
-    </div>
+                    {{--  telefonos, correos --}}
 
-    <div class="col-md-4">
-        <div class="input-group mb-3 ">
-            <span class="input-group-text" id="lblLocalidad">{{ __('Localidad') }}</span>
-            <select id="ddlLocalidad" class="form-control" name="ddlLocalidad" disabled required>
-            </select>
-        </div>
-    </div>
-    </div>
+                    <div class="row">
+
+                        <div class="col-md-3">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="lblCelPhone">Teléfono Celular</span>
+                                <input id="telefono_celular" type="number" maxlength="10"
+                                    class="form-control @error('telefono_celular') is-invalid @enderror"
+                                    name="telefono_celular" value="{{ old('telefono_celular') }}" required
+                                    autocomplete="telefono_celular" aria-label="Teléfono Celular"
+                                    aria-describedby="lblCelPhone">
+
+                                @error('telefono_celular')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+
+                            </div>
+                        </div>
 
 
+                        <div class="col-md-3">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="lblCelOffice">Teléfono Oficina</span>
+                                <input id="telefono_oficina" type="number" maxlength="10"
+                                    class="form-control @error('telefono_oficina') is-invalid @enderror"
+                                    name="telefono_oficina" value="{{ old('telefono_oficina') }}" required
+                                    autocomplete="telefono_oficina" aria-label="Teléfono Oficina"
+                                    aria-describedby="lblCelOffice">
+
+                                @error('telefono_oficina')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="lblEmailPersonal">{{ __('Email Personal') }}</span>
+                                <input id="email_personal" type="email"
+                                    class="form-control @error('email_personal') is-invalid @enderror"
+                                    name="email_personal" value="{{ old('email_personal') }}" required
+                                    autocomplete="email_personal" aria-label="Email Personal"
+                                    aria-describedby="lblEmailPersonal">
+
+                                @error('email_personal')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="lblEmailLaboral">{{ __('Email Laboral') }}</span>
+                                <input id="email_laboral" type="email"
+                                    class="form-control @error('email_laboral') is-invalid @enderror"
+                                    name="email_laboral" value="{{ old('email_laboral') }}" required
+                                    autocomplete="email_laboral" aria-label="Email Laboral"
+                                    aria-describedby="lblEmailLaboral">
+
+                                @error('email_laboral')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    {{--  partido, observaciones --}}
+
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="lblPartido">{{ __('Filiación Política') }}</span>
+                                <select id="ddlPartido" name="ddlPartido" aria-describedby="lblPartido"
+                                    class="form-control" required>
+                                    <option value="" selected>Seleccione una opción</option>
+                                    @foreach ($partidos as $partido)
+                                        <option value="{{ $partido->id }}">{{ $partido->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-9">
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="lblObservaciones">{{ __('Observaciones') }}</span>
+                                <input id="Observaciones" type="text"
+                                    class="form-control @error('Observaciones') is-invalid @enderror"
+                                    name="Observaciones" value="{{ old('Observaciones') }}" autocomplete="Observaciones"
+                                    autofocus onkeyup="mayusculas(this);" aria-label="Observaciones"
+                                    aria-describedby="lblObservaciones">
+
+                                @error('Observaciones')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+
+                            </div>
+                        </div>
+                    </div>
+
+                    {{--  fotografia --}}
+
+                    <div class="form-row mb-3">
+
+                        <div class="col-md-10">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="ContactoFile" name="ContactoFile"
+                                    name="ContactoFile" accept="image/png, image/jpg, image/jpeg, application/pdf"
+                                    required>
+                                <label class="custom-file-label" for="ContactoFile" data-browse="Buscar Foto">Subir
+                                    archivo con la fotografía del contacto</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button data-name="ContactoFile" class="btn btn-success btncamera" type="button"
+                                aria-pressed="true"><span style="font-size: 1.2em; color: white;"
+                                    class="fa fa-camera mr-2"></span>Tomar Fotografía</button>
+                        </div>
+
+                    </div>
 
 
-
-
-
-
-
-
-
-
-
-
-    <br>
-
-    <div class="input-group mb-3">
-        <span class="input-group-text" id="lblEmail">{{ __('Email Address') }}</span>
-        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email"
-            value="{{ old('email') }}" required autocomplete="email" aria-label="Email" aria-describedby="lblEmail">
-
-        @error('email')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-        @enderror
-
-    </div>
-
-    <br>
-
-    <div class="input-group mb-3">
-        <span class="input-group-text" id="lblPhone">Teléfono Celular</span>
-        <input id="phone" type="number" maxlength="10" class="form-control @error('phone') is-invalid @enderror"
-            name="phone" value="{{ old('phone') }}" required autocomplete="phone" aria-label="Teléfono"
-            aria-describedby="lblPhone">
-
-        @error('phone')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-        @enderror
-
-    </div>
-
-    <br>
-
-    <div class="input-group mb-3">
-        <span class="input-group-text" id="lblPassword">{{ __('Password') }} </span>
-
-        <input id="password" type="password" class="form-control @error('password') is-invalid @enderror"
-            name="password" required autocomplete="new-password" aria-label="Password" aria-describedby="lblPassword">
-
-        @error('password')
-            <span class="invalid-feedback" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
-        @enderror
-    </div>
-
-    <br>
-
-    <div class="input-group mb-3">
-        <span class="input-group-text" id="lblPassword-confirm">{{ __('Confirm Password') }} </span>
-
-        <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required
-            autocomplete="new-password" aria-label="Password Confirm" aria-describedby="lblPassword-confirm">
-    </div>
-
-    <br>
-
-    <div class="row ">
-        <div class="col-md-12">
-            <div class="input-group mb-3 align-items-center">
-                <span class="input-group-text" id="lblPermiso">Permiso: </span>
-                <div class="form-inline">
-                    <input type="radio" name="radio" id="radio1" checked="true" value="0" />
-                    <label class="radio ml-3" for="radio1">ADMINISTRADOR</label>
-                    <input type="radio" name="radio" id="radio2" value="1" /> <label class="radio ml-3"
-                        for="radio2">CONSULTA</label>
+                </div>
+                <div class="card-footer">
+                    <div class="col-md-6 col-lg-4 col-xl-3 btn-toolbar justify-content-around " role="toolbar">
+                        <div class="btn-group mr-2" role="group">
+                            <a href="{{ route('Contactos.Index') }}" class="btn btn-secondary"><i
+                                    class="fa fa-times-circle fa-lg mr-1"></i> Cancelar</a>
+                        </div>
+                        <div class="btn-group mr-2" role="group">
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-save fa-lg mr-1"></i> <strong>
+                                    Guardar</strong></button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
 
+        </form>
 
-    <br>
+        <div class="modal fade" id="ModalFoto" tabindex="-1" role="dialog" aria-labelledby="ModalFotoLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
 
-    <div class="input-group mb-3">
-        <span class="input-group-text" id="estatus">Status: </span>
-        <input type="checkbox" aria-describedby="estatus" id="status" name="status" data-toggle="toggle"
-            data-onstyle="success" data-offstyle="secondary" data-on="Activo" data-off="Inactivo" checked>
-    </div>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ModalFotoLabel"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
 
-    <br>
-    </div>
-    <div class="card-footer">
-        <div class="col-md-6 col-lg-4 col-xl-3 btn-toolbar justify-content-around " role="toolbar">
-            <div class="btn-group mr-2" role="group">
-                <a href="{{ route('Usuarios.Index') }}" class="btn btn-secondary"><i
-                        class="fa fa-times-circle fa-lg mr-1"></i> Cancelar</a>
+                    <div class="modal-body">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                            data-btn="btnCancelarFoto">Cancelar</button>
+                        <button type="button" class="btn btn-success" data-btn="btnGuardarFoto">Guardar
+                            fotografía</button>
+
+                    </div>
+                </div>
+
             </div>
-            <div class="btn-group mr-2" role="group">
-                <button type="submit" class="btn btn-primary"><i class="fa fa-save fa-lg mr-1"></i> <strong>
-                        Guardar</strong></button>
-            </div>
         </div>
-    </div>
-    </div>
-
-
-    </form>
     @endif
+@endsection
+
+@section('js')
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
+    <script src="{{ asset('js/webcam.js') }}"></script>
 @endsection
 
 @section('script')
     <script>
+        $(document).ready(function() {
+
+            $("[name='telefono_celular'],[name='telefono_celular']").attr({pattern:'[1-9]{1}[0-9]{9}', type:'text', title:'10 NUMEROS'});//validacion para numero de telefono
+            $("[name='telefono_oficina'],[name='telefono_oficina']").attr({pattern:'[1-9]{1}[0-9]{9}', type:'text', title:'10 NUMEROS'});//validacion para numero de telefono
+			$("[name='CodPostal']").attr({pattern:'[7]{2}[0-9]{3}', type:'text', title:'5 NUMEROS'});//codigo postal validacion
+			$("[name='curp']").attr({pattern:'[A-Z]{4}[0-9]{6}[HM]{1}[A-Z]{5}[A-Z0-9]{1}[0-9]{1}', type:'text', title:'FORMATO DE CURP VALIDA'});//codigo postal validacion
+
+
+            // Add the following code if you want the name of the file appear on select
+            $(".custom-file-input").on("change", function() {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+            });
+
+            bsCustomFileInput.init();
+
+            $(document).on('click', '.btncamera', function() { //boton de camara
+                // $(".btncamera").off().click(function(){//           
+                var namedoc = $(this).data('name');
+                Webcam.set({
+                    width: 640,
+                    height: 480,
+                    image_format: 'jpeg',
+                    jpeg_quality: 98
+                });
+                Webcam.reset('#camera');
+                Webcam.set("constraints", {
+                    facingMode: "environment"
+                });
+
+                $("#ModalFoto .modal-title").html('Tomar fotografía');
+                $("#ModalFoto .modal-dialog").addClass(
+                    'modal-lg'); //<<------------------------corregir de nuevo
+                var htmlfoto = '<div id="camera" style="display:block;margin:auto;"></div>';
+                htmlfoto +=
+                    '<button id="take_photo" class="btn btn-primary btn-block mt-2 mb-2" type=button>Tomar fotografía</button>';
+                htmlfoto += '<div id="resultPhoto"></div>';
+
+
+                $("#ModalFoto .modal-body").html(htmlfoto);
+
+                $('#ModalFoto [data-btn="btnGuardarFoto"]').attr("disabled", true);
+
+                Webcam.attach('#camera');
+
+                $("#take_photo").off().click(function() { //solo captura la imagen
+                    Webcam.snap(function(data_uri) {
+                        $('#resultPhoto').html(
+                            '<img style="display:block;margin:auto;" src="' +
+                            data_uri + '"/>');
+                    });
+                    $('#ModalFoto [data-btn="btnGuardarFoto"]').removeAttr("disabled");
+                });
+
+                $('#ModalFoto [data-btn="btnGuardarFoto"]').off().click(
+                    function() { //guarda el base64 de la imagen en un hidden
+                        var imgbase64 = $('#resultPhoto img').attr('src');
+                        $('#' + namedoc).attr('type', 'hidden').removeClass('custom-file-input');
+                        $('#' + namedoc).val(imgbase64);
+                        $('#' + namedoc).next().removeClass('custom-file-label');
+                        $("#ModalFoto").modal('hide'); //se cierra el modal
+                        $("#ModalFoto .modal-dialog").removeClass('modal-lg');
+                    });
+
+                $("#ModalFoto").modal('show');
+            });
+        });
+
+
+
         $('#ddlEstado').off().change(function() {
             var ddlEstado = $(this);
             if (ddlEstado.val() == '') {
@@ -454,7 +606,7 @@
             }).then(response => {
                 return response.json()
             }).then(data => {
-                var opciones = "<option value=''><-- Seleccione --></option>";
+                var opciones = "<option value=''>Seleccione una opción</option>";
                 for (let i in data.lista) {
                     opciones += '<option value="' + data.lista[i].cve_mun + '">' + data.lista[i].nom_mun +
                         '</option>';
@@ -479,7 +631,7 @@
             }).then(response => {
                 return response.json()
             }).then(data => {
-                var opciones = "<option value=''><-- Seleccione --></option>";
+                var opciones = "<option value=''>Seleccione una opción</option>";
                 for (let i in data.lista) {
                     opciones += '<option value="' + data.lista[i].cve_loc + '">' + data.lista[i].nom_loc +
                         '</option>';
