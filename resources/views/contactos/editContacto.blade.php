@@ -32,7 +32,7 @@
                                         alt="Fotografia" class="img-fluid img-thumbnail mx-auto d-block mb-3 w-75">
                                 </picture>
                             </div>
-                            <div class="row justify-content-around align-items-center eliminarFoto">
+                            <div class="row justify-content-around align-items-center">
                                 @if ($contacto->foto)
                                     <div class=" mb-3">
                                         <a href="{{ asset('/storage/' . $contacto->foto) }}" class="link-info"
@@ -471,7 +471,7 @@
 
                                 @if ($contacto->foto)
                                 @else
-                                    <div class="col-md-10 mb-3 subirFoto">
+                                    <div class="col-md-10 mb-3">
                                         <div class="custom-file">
                                             <input type="file" class="custom-file-input" id="ContactoFile"
                                                 name="ContactoFile" name="ContactoFile"
@@ -518,6 +518,7 @@
         $(document).on('click', '.btndelFoto', function(e) {
             e.preventDefault();
             var id = $(this).data('id');
+
             Swal.fire({
                 title: '¿Estás seguro de querer eliminar la fotografía?',
                 text: "¡No se podrá revertir!",
@@ -536,8 +537,6 @@
                         }
                     });
                     var id = $(this).data('id');
-
-                    // ajax
                     $.ajax({
                         type: "POST",
                         url: "{{ url('borrarFotoContacto') }}",
@@ -547,34 +546,14 @@
                         dataType: 'json',
                         success: function(res) {
                             //regresa del borrado
-                            Swal.fire(
-                                'Eliminado!',
-                                'La fotografía ha sido eliminada.',
-                                'success'
-                            )
-
-                            //actualizamos la imagen, ocultamos botones y mostramos la subida del archivo
-                            $('#foto').attr('src', '');
-                            $('.eliminarFoto').hide();
-                            $('.subirFoto').show();
-
-                            // $("#VerContacto").modal('show');
-                            // $('#foto').attr('src', 'storage/' + res.foto);
-                            // $('#Titulo').val(res.titulo);
-                            // $('#name').val(res.nombre_completo);
-                            // $('#FechaNacimiento').val(res.fecha_nacimiento);
-                            // $('#TelefonoCelular').val(res.telefono_celular);
-                            // $('#EmailPersonal').val(res.email_personal);
-                            // $('#Sector').val(res.Sector);
-                            // $('#Categoria').val(res.Categoria);
-                            // $('#Area').val(res.area);
-                            // $('#Dependencia').val(res.dependencia);
-                            // $('#Domicilio').val(res.domicilio_laboral);
-                            // $('#Estado').val(res.Estado);
-                            // $('#Municipio').val(res.Municipio);
-                            // $('#Localidad').val(res.Localidad);
-                            // $('#editar').attr('href', '/contactos/editar/' + res.id);
-                            //console.log(res);
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                title: 'La fotografía ha sido eliminada',
+                                showConfirmButton: false,
+                                timer: 5000
+                            })
+                            window.location.reload();
                         },
                         error: function(XMLHttpRequest, textStatus, errorThrown) {
                             Swal.fire({
@@ -586,59 +565,8 @@
                             })
                         }
                     });
-
-
                 }
             })
-
-
-
-
-
-        });
-
-        $(".btndelFoto2").off().click(function() { //sirve para eliminar un documento
-            var delbtn = $(this);
-
-            $.ajax({
-                type: "POST",
-                url: "/2022/documentacion/delete/" + delbtn.data(
-                    'docname'), //se manda el nombre del documento
-                data: {
-                    'folio': folio,
-                    'nameatr': delbtn.data('name'),
-                    "_token": "{{ csrf_token() }}"
-                },
-                beforeSend: function() {
-                    delbtn.attr("disabled", true);
-                }
-            }).done(function(data) {
-                if (data[2] ==
-                    0) { //si es igual a 0 quiere decir que se descompletaron los documentos obligarios
-                    if ($('#entregaenupdatebtn')
-                        .length) { //entonces verifica si ya existia el boton de entrega
-                        $('#entregaenupdatebtn').remove(); //si existe lo borra
-                        $('#entregaenupdatedocbtn').remove(); //si existe lo borra
-                    }
-                }
-
-                delbtn.closest('.form-row').html(data[0]);
-                $("body").append(
-                    '<div style="position: fixed; top: 15%; right: 30px;" id="sccs" class="alert alert-success alert-dismissible fade show" role="alert"> <h3 class="alert-heading">' +
-                    data[1] +
-                    '</h3><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'
-                );
-                bsCustomFileInput.init();
-
-                setTimeout(function() {
-                    $("#sccs").alert('close');
-                    $("#sccs").remove();
-                }, 4500);
-
-            }).fail(function(jqXHR, textStatus, errorThrown) {
-                delbtn.removeAttr("disabled");
-                alert('Ocurrio un error al borrar el documento favor de reportarlo');
-            });
         });
     </script>
 @endsection
