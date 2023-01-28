@@ -14,12 +14,12 @@
     <br>
 
     @if (session('scssmsg'))
-    <script>
-         Swal.fire(
-      'Guardado!',
-      '{{ session("scssmsg") }}',
-      'success'
-    )
+        <script>
+            Swal.fire(
+                'Guardado!',
+                '{{ session('scssmsg') }}',
+                'success'
+            )
         </script>
     @endif
 

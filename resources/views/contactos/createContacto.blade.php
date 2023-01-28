@@ -534,7 +534,7 @@
                 });
 
                 $("#ModalFoto .modal-title").html('Tomar fotografía');
-                $("#ModalFoto .modal-dialog").addClass('modal-lg'); 
+                $("#ModalFoto .modal-dialog").addClass('modal-lg');
                 var htmlfoto = '<div id="camera" style="display:block;margin:auto;"></div>';
                 htmlfoto +=
                     '<button id="take_photo" class="btn btn-primary btn-block mt-2 mb-2" type=button>Tomar fotografía</button>';

@@ -26,7 +26,7 @@ class CategoriasController extends Controller
         if ($request->ajax()) {
 
             $categorias = DB::table('c_categorias as cat')
-            ->join('c_sectores as sec', 'sec.id', '=', 'cat.idSector')
+                ->join('c_sectores as sec', 'sec.id', '=', 'cat.idSector')
                 ->select(
                     'cat.id',
                     'cat.name',
@@ -39,9 +39,8 @@ class CategoriasController extends Controller
             return Datatables::of($categorias)
                 ->addColumn('action', function ($row) {
                     $html = '<a href="' . route('Categorias.Editar', $row->id) . '" class="btn btn-sm btn-primary btn-edit"><i class="fa fa-edit mr-2"></i>Editar</a> ';
-                    // $html .= '<button data-rowid="' . $row->id . '" class="btn btn-xs btn-danger btn-delete">Del</button>';
                     return $html;
-                })->make(true);//->toJson();
+                })->make(true); //->toJson();
         }
 
         return view('categorias.index');
@@ -70,9 +69,6 @@ class CategoriasController extends Controller
         //
         //
         $fecha = Carbon::now();
-        // $fecha = $fecha->subHour(5);
-        //
-        //
 
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
@@ -160,7 +156,6 @@ class CategoriasController extends Controller
         try {
             DB::beginTransaction();
 
-            //$activo = Input::has('status') ? true : false;
             $categoria = Categoria::where('id', $id)->first();
             $categoria->name = $request->get('name');
             $categoria->status = $request->has('status') ? "1" : "0";

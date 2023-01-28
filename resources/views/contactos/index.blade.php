@@ -96,23 +96,26 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="input-group mb-3">
-                                        <span class="input-group-text" id="lblFechaNacimiento">{{ __('Fecha Nacimiento') }}</span>
-                                        <input id="FechaNacimiento" name="FechaNacimiento" type="text" class="form-control"
-                                            onkeyup="mayusculas(this);" readonly aria-label="Fecha Nacimiento"
-                                            aria-describedby="lblFechaNacimiento">
+                                        <span class="input-group-text"
+                                            id="lblFechaNacimiento">{{ __('Fecha Nacimiento') }}</span>
+                                        <input id="FechaNacimiento" name="FechaNacimiento" type="text"
+                                            class="form-control" onkeyup="mayusculas(this);" readonly
+                                            aria-label="Fecha Nacimiento" aria-describedby="lblFechaNacimiento">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="input-group mb-3">
-                                        <span class="input-group-text" id="lblTelefonoCelular">{{ __('Telefono Celular') }}</span>
-                                        <input id="TelefonoCelular" name="TelefonoCelular" type="text" class="form-control"
-                                            onkeyup="mayusculas(this);" readonly aria-label="Telefono Celular"
-                                            aria-describedby="lblTelefonoCelular">
+                                        <span class="input-group-text"
+                                            id="lblTelefonoCelular">{{ __('Telefono Celular') }}</span>
+                                        <input id="TelefonoCelular" name="TelefonoCelular" type="text"
+                                            class="form-control" onkeyup="mayusculas(this);" readonly
+                                            aria-label="Telefono Celular" aria-describedby="lblTelefonoCelular">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="input-group mb-3">
-                                        <span class="input-group-text" id="lblEmailPersonal">{{ __('Email Personal') }}</span>
+                                        <span class="input-group-text"
+                                            id="lblEmailPersonal">{{ __('Email Personal') }}</span>
                                         <input id="EmailPersonal" name="EmailPersonal" type="text" class="form-control"
                                             onkeyup="mayusculas(this);" readonly aria-label="Email Personal"
                                             aria-describedby="lblEmailPersonal">
@@ -208,10 +211,11 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" data-btn="cnl"><i class="fa fa-times-circle fa-lg mr-1"></i>Cerrar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" data-btn="cnl"><i
+                            class="fa fa-times-circle fa-lg mr-1"></i> Cerrar</button>
                     <div class="btn-group mr-2" role="group">
-                        <a href="" id="editar" name="editar" class="btn btn-success"><i
-                                class="fa fa-eye fa-lg mr-1"></i> Editar</a>
+                        <a href="" id="editar" name="editar" class="btn btn-primary"><i
+                                class="fa fa-edit fa-lg mr-1"></i> Editar</a>
                     </div>
                 </div>
             </div>
@@ -230,57 +234,46 @@
 
 @section('script')
     <script type="text/javascript">
-        $(document).on('click', '.btn-edit-plan', function() {
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-            var id = $(this).data('id');
-            console.log(id);
-            // ajax
-            $.ajax({
-                type: "POST",
-                url: "{{ url('verContacto') }}",
-                data: {
-                    id: id
-                },
-                dataType: 'json',
-                success: function(res) {
-                    $("#VerContacto").modal('show');
-                    $('#foto').attr('src', 'storage/' + res.foto);
-                    $('#Titulo').val(res.titulo);
-                    $('#name').val(res.nombre_completo);
-                    $('#FechaNacimiento').val(res.fecha_nacimiento);
-                    $('#TelefonoCelular').val(res.telefono_celular);
-                    $('#EmailPersonal').val(res.email_personal);
-                    $('#Sector').val(res.Sector);
-                    $('#Categoria').val(res.Categoria);
-                    $('#Area').val(res.area);
-                    $('#Dependencia').val(res.dependencia);
-                    $('#Domicilio').val(res.domicilio_laboral);
-                    $('#Estado').val(res.Estado);
-                    $('#Municipio').val(res.Municipio);
-                    $('#Localidad').val(res.Localidad);
-                    $('#editar').attr('href', '/contactos/editar/' + res.id);
-                }
-            });
-        });
-
-
-
         $(document).ready(function() {
 
             //*** MODAL ***//
-            // $(document).on('click', '.btnshow', function() {
 
-            //                 $("#ModalVer .modal-title").html('Ver Contacto');
-            //                 $("#ModalVer .modal-dialog").addClass('modal-lg');
-
-
-            //                 $("#ModalVer").modal('show');
-            //             });
-
+            $(document).on('click', '.btnVer', function() {
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                var id = $(this).data('id');
+                console.log(id);
+                // ajax
+                $.ajax({
+                    type: "POST",
+                    url: "{{ url('verContacto') }}",
+                    data: {
+                        id: id
+                    },
+                    dataType: 'json',
+                    success: function(res) {
+                        $("#VerContacto").modal('show');
+                        $('#foto').attr('src', 'storage/' + res.foto);
+                        $('#Titulo').val(res.titulo);
+                        $('#name').val(res.nombre_completo);
+                        $('#FechaNacimiento').val(res.fecha_nacimiento);
+                        $('#TelefonoCelular').val(res.telefono_celular);
+                        $('#EmailPersonal').val(res.email_personal);
+                        $('#Sector').val(res.Sector);
+                        $('#Categoria').val(res.Categoria);
+                        $('#Area').val(res.area);
+                        $('#Dependencia').val(res.dependencia);
+                        $('#Domicilio').val(res.domicilio_laboral);
+                        $('#Estado').val(res.Estado);
+                        $('#Municipio').val(res.Municipio);
+                        $('#Localidad').val(res.Localidad);
+                        $('#editar').attr('href', '/contactos/editar/' + res.id);
+                    }
+                });
+            });
 
 
             //*** DATATABLE***///
