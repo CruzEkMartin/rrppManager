@@ -83,6 +83,8 @@ class ContactosController extends Controller
                 ->orderBy('cont.id', 'DESC')
                 ->get();
 
+
+
             return Datatables::of($contactos)
                 ->addColumn('action', function ($row) {
         //            $html = '<a href="#" aria-pressed="true" class="btn btn-sm btn-success btnshow"><i class="fa fa-eye mr-2"></i>Ver</a> <a href="' . route('Contactos.Editar', $row->id) . '" class="btn btn-sm btn-primary btn-edit"><i class="fa fa-edit mr-2"></i>Editar</a> ';

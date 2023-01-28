@@ -96,6 +96,7 @@ Route::group(['namespace' => '\App\Http\Controllers'], function () {
 
 //*********AJAX */
 Route::group(['namespace' => '\App\Http\Controllers'], function () {
+    Route::post('/obtenerCategorias', 'QueriesController@obtenerCategorias')->name('Queries.ObtenerCategorias');
     Route::post('/obtenerMunicipios', 'QueriesController@obtenerMunicipios')->name('Queries.ObtenerMunicipios');
     Route::post('/obtenerLocalidades', 'QueriesController@obtenerLocalidades')->name('Queries.ObtenerLocalidades');
     Route::post('/verContacto', 'QueriesController@obtenerContacto')->name('Queries.ObtenerContacto');

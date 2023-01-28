@@ -17,6 +17,7 @@ class CreateCCategoriasTable extends Migration
             $table->id();
             $table->string('name');
             $table->boolean('status');
+            $table->integer('idSector');
             $table->timestamps();
         });
     }

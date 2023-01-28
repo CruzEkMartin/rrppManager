@@ -15,6 +15,45 @@ class QueriesController extends Controller
      * devuelve un listado de municipios para ser usado en dropdowns ajax
      * 
      *******************************************************/
+    public function obtenerCategorias(Request $request)
+    {
+
+        if (isset($request->texto)) {
+            //$subcategorias = Subcategoria::whereCategoria_id($request->texto)->get();
+           // $idEstado = $request->texto;
+
+            $categorias = DB::table('c_categorias')
+                ->select(
+                    'id',
+                    'name'
+                )
+                ->where('idSector', '=', $request->texto)
+                ->where('status', "1")
+                ->get();
+
+            //retornamos los valores de la consulta
+            return response()->json(
+                [
+                    'lista' => $categorias,
+                    'success' => true
+                ]
+            );
+        } else {
+            return response()->json(
+                [
+                    'success' => false
+                ]
+            );
+        }
+    }
+
+
+
+    /*******************************************************
+     * 
+     * devuelve un listado de municipios para ser usado en dropdowns ajax
+     * 
+     *******************************************************/
     public function obtenerMunicipios(Request $request)
     {
 

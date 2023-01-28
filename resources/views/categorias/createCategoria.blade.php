@@ -38,6 +38,25 @@
 
                     </div>
 
+                    <br>
+
+                    <div class="input-group mb-3">
+                        <span class="input-group-text" id="lblSector">{{ __('Sector') }}</span>
+                        <select id="ddlSector" name="ddlSector" aria-describedby="lblsector" class="form-control"
+                            required autofocus>
+                            <option value="" selected>Seleccione una opción</option>
+                            @foreach ($sectores as $sector)
+                                <option value="{{ $sector->id }}">{{ $sector->name }}
+                                </option>
+                            @endforeach
+                        </select>
+
+                        @error('ddlSector')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
 
                     <br>
 
