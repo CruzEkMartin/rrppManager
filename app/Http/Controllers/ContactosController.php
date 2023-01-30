@@ -231,9 +231,9 @@ class ContactosController extends Controller
                 }
 
                 //actiualizamos la tabla con la ruta
-                $upincidencia = Contacto::find($idContacto["id"]);
-                $upincidencia->Foto = $directorio . "/" . $imageName;
-                $upincidencia->save();
+                $contactoFoto = Contacto::find($idContacto["id"]);
+                $contactoFoto->Foto = $directorio . "/" . $imageName;
+                $contactoFoto->save();
 
                 //* si no hay error en la transaccion hacemos commit y redireccionamos correctamente
                 DB::commit();
@@ -338,7 +338,165 @@ class ContactosController extends Controller
      */
     public function update(Request $request, $id)
     {
+        //validamos los campos
         //
+        $fecha = Carbon::now();
+
+        //validamos los campos
+        //if (($request->hasFile('ContactoFile')) || ($request->has('ContactoFile'))) {
+
+
+        //validamos si se tomó una foto
+        if ($request->has('ContactoFile')) {
+
+            Validator::make($request->all(), [
+                'ddlSector' => ['required', 'integer'],
+                'ddlCategoria' => ['required', 'integer'],
+                'name' => ['required', 'string'],
+                'ApellidoPaterno' => ['required', 'string'],
+                'ApellidoMaterno' => ['required', 'string'],
+                'ddlSexo' => ['required', 'integer'],
+                'Titulo' => ['required', 'string'],
+                'fecha_nac' => ['required', 'string'],
+                'Dependencia' => ['required', 'string'],
+                'Cargo' => ['required', 'string'],
+                'Area' => ['required', 'string'],
+                'Domicilio' => ['required', 'string'],
+                'CodPostal' => ['required', 'integer', 'digits:5'],
+                'ddlEstado' => ['required', 'string'],
+                'ddlMunicipio' => ['required', 'string'],
+                'ddlLocalidad' => ['required', 'string'],
+                'telefono_celular' => ['required', 'integer', 'digits:10'],
+                'telefono_oficina' => ['required', 'integer', 'digits:10'],
+                'email_personal' => ['required', 'email'],
+                'email_laboral' => ['required', 'email'],
+                'ddlPartido' => ['required', 'integer'],
+            ])->validate();
+        }
+
+        //validamos si se subió un archivo
+        if ($request->hasFile('ContactoFile')) {
+
+            Validator::make($request->all(), [
+                'ddlSector' => ['required', 'integer'],
+                'ddlCategoria' => ['required', 'integer'],
+                'name' => ['required', 'string'],
+                'ApellidoPaterno' => ['required', 'string'],
+                'ApellidoMaterno' => ['required', 'string'],
+                'ddlSexo' => ['required', 'integer'],
+                'Titulo' => ['required', 'string'],
+                'fecha_nac' => ['required', 'string'],
+                'Dependencia' => ['required', 'string'],
+                'Cargo' => ['required', 'string'],
+                'Area' => ['required', 'string'],
+                'Domicilio' => ['required', 'string'],
+                'CodPostal' => ['required', 'integer', 'digits:5'],
+                'ddlEstado' => ['required', 'string'],
+                'ddlMunicipio' => ['required', 'string'],
+                'ddlLocalidad' => ['required', 'string'],
+                'telefono_celular' => ['required', 'integer', 'digits:10'],
+                'telefono_oficina' => ['required', 'integer', 'digits:10'],
+                'email_personal' => ['required', 'email'],
+                'email_laboral' => ['required', 'email'],
+                'ddlPartido' => ['required', 'integer'],
+                'ContactoFile' => ['file', 'mimes:jpg,jpeg,pdf,png', ' required', 'max:3072'],
+            ])->validate();
+        }
+
+        //obtenemos el contacto 
+        $contacto = Contacto::find($id);
+
+        //validamos si la imagen no se ha borrado
+        if ($contacto->foto) {
+
+            dd($contacto->foto);
+
+            Validator::make($request->all(), [
+                'ddlSector' => ['required', 'integer'],
+                'ddlCategoria' => ['required', 'integer'],
+                'name' => ['required', 'string'],
+                'ApellidoPaterno' => ['required', 'string'],
+                'ApellidoMaterno' => ['required', 'string'],
+                'ddlSexo' => ['required', 'integer'],
+                'Titulo' => ['required', 'string'],
+                'fecha_nac' => ['required', 'string'],
+                'Dependencia' => ['required', 'string'],
+                'Cargo' => ['required', 'string'],
+                'Area' => ['required', 'string'],
+                'Domicilio' => ['required', 'string'],
+                'CodPostal' => ['required', 'integer', 'digits:5'],
+                'ddlEstado' => ['required', 'string'],
+                'ddlMunicipio' => ['required', 'string'],
+                'ddlLocalidad' => ['required', 'string'],
+                'telefono_celular' => ['required', 'integer', 'digits:10'],
+                'telefono_oficina' => ['required', 'integer', 'digits:10'],
+                'email_personal' => ['required', 'email'],
+                'email_laboral' => ['required', 'email'],
+                'ddlPartido' => ['required', 'integer'],
+            ])->validate();
+        }
+
+
+        //inicia la transaccion
+        try {
+            DB::beginTransaction();
+
+
+            $contacto->idUsuario = (Auth::check()) ? Auth::user()->id : 0;
+            $contacto->idSector = $request->get('ddlSector');
+            $contacto->idCategoria = $request->get('ddlCategoria');
+            $contacto->genero = $request->get('ddlSexo');
+            $contacto->titulo = $request->get('Titulo');
+            $contacto->nombre = $request->get('name');
+            $contacto->apellido_paterno = $request->get('ApellidoPaterno');
+            $contacto->apellido_materno = $request->get('ApellidoMaterno');
+            $contacto->fecha_nacimiento = $request->get('fecha_nac');
+            $contacto->cargo = $request->get('Cargo');
+            $contacto->area = $request->get('Area');
+            $contacto->dependencia = $request->get('Dependencia');
+            $contacto->telefono_celular = $request->get('telefono_celular');
+            $contacto->telefono_oficina = $request->get('telefono_oficina');
+            //$contacto->asistente = $request->get('asistente');
+            $contacto->domicilio_laboral = $request->get('Domicilio');
+            $contacto->codigo_postal = $request->get('CodPostal');
+            $contacto->cve_ent = $request->get('ddlEstado');
+            $contacto->cve_mun = $request->get('ddlMunicipio');
+            $contacto->cve_loc = $request->get('ddlLocalidad');
+            $contacto->email_laboral = $request->get('email_laboral');
+            $contacto->email_personal = $request->get('email_personal');
+            $contacto->idPartido = $request->get('ddlPartido');
+            $contacto->Observaciones = $request->get('Observaciones');
+            $contacto->save();
+
+            //guardamos la foto o documento
+            $directorio = "contacto";
+
+            if ($request->hasFile('ContactoFile')) {
+                $extension = strtolower($request->file('ContactoFile')->getClientOriginalExtension());
+                $request->file('ContactoFile')->storeAs($directorio, $contacto["id"] . '.' . $extension);
+                $imageName = $contacto["id"] . '.' . $extension;
+            } elseif ($request->has('ContactoFile')) {
+                $image = $request->get('ContactoFile');
+                $image = str_replace('data:image/jpeg;base64,', '', $image);
+                $image = str_replace(' ', '+', $image);
+                $imageName = $contacto["id"] . '.' . 'jpg';
+                Storage::disk('public')->put($directorio . "/" . $imageName, base64_decode($image));
+            }
+
+            //actiualizamos la tabla con la ruta
+            $contactoFoto = Contacto::find($id["id"]);
+            $contactoFoto->Foto = $directorio . "/" . $imageName;
+            $contactoFoto->save();
+
+            //* si no hay error en la transaccion hacemos commit y redireccionamos correctamente
+            DB::commit();
+            return redirect('/contactos')->with('scssmsg', 'Se ha guardado correctamente el contacto');
+        } catch (\Exception $e) {
+            //! en caso de error hacemos rollback y mandamos mensaje de error
+            DB::rollBack();
+            return Redirect::back()->with('errormsg', 'Ha ocurrido un error al intentar actualizar el contacto, intente de nuevo.');
+        }
+        // }
     }
 
     /**
