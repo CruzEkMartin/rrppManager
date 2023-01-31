@@ -4,7 +4,7 @@
     <br><br>
 
     @if (Auth::check() && Auth::user()->permiso == 0)
-        <form action="{{ route('Contactos.Update', $contacto->id) }}" method="post">
+        <form action="{{ route('Contactos.Update', $contacto->id) }}" method="post" enctype="multipart/form-data">
             @csrf
             @method('put')
 
@@ -85,8 +85,26 @@
                                     <div class="input-group mb-3">
                                         <span class="input-group-text" id="lblCategoria">{{ __('Categoría') }}</span>
                                         <select id="ddlCategoria" name="ddlCategoria" aria-describedby="lblCategoria"
-                                            class="form-control" required>
+                                            class="form-control" required autofocus>
+                                            <option value="" selected>Seleccione una opción</option>
+                                            @if ($categorias)
+                                                @foreach ($categorias as $categoria)
+                                                    @if ($categoria->id == $contacto->idCategoria)
+                                                        <option selected value="{{ $categoria->id }}">{{ $categoria->name }}
+                                                        </option>
+                                                    @else
+                                                        <option value="{{ $categoria->id }}">{{ $categoria->name }}
+                                                        </option>
+                                                    @endif
+                                                @endforeach
+                                            @endif
                                         </select>
+
+                                        @error('ddlCategoria')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
                                     </div>
                                 </div>
                             </div>
@@ -328,9 +346,27 @@
                                 <div class="col-md-4">
                                     <div class="input-group mb-3 ">
                                         <span class="input-group-text" id="lblMunicipio">{{ __('Municipio') }}</span>
-                                        <select id="ddlMunicipio" class="form-control" name="ddlMunicipio" disabled
-                                            required>
+                                        <select id="ddlMunicipio" class="form-control" name="ddlMunicipio" 
+                                            required autofocus>
+                                            <option value="" selected>Seleccione una opción</option>
+                                            @if ($municipios)
+                                                @foreach ($municipios as $municipio)
+                                                    @if ($municipio->cve_mun == $contacto->cve_mun)
+                                                        <option selected value="{{ $municipio->cve_mun }}">{{ $municipio->nom_mun }}
+                                                        </option>
+                                                    @else
+                                                        <option value="{{ $municipio->cve_mun }}">{{ $municipio->nom_mun }}
+                                                        </option>
+                                                    @endif
+                                                @endforeach
+                                            @endif
                                         </select>
+
+                                        @error('ddlMunicipio')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
                                     </div>
 
                                 </div>
@@ -338,9 +374,27 @@
                                 <div class="col-md-4">
                                     <div class="input-group mb-3 ">
                                         <span class="input-group-text" id="lblLocalidad">{{ __('Localidad') }}</span>
-                                        <select id="ddlLocalidad" class="form-control" name="ddlLocalidad" disabled
+                                        <select id="ddlLocalidad" class="form-control" name="ddlLocalidad" 
                                             required>
+                                            <option value="" selected>Seleccione una opción</option>
+                                            @if ($localidades)
+                                                @foreach ($localidades as $localidad)
+                                                    @if ($localidad->cve_loc == $contacto->cve_loc)
+                                                        <option selected value="{{ $localidad->cve_loc }}">{{ $localidad->nom_loc }}
+                                                        </option>
+                                                    @else
+                                                        <option value="{{ $localidad->cve_loc }}">{{ $localidad->nom_loc }}
+                                                        </option>
+                                                    @endif
+                                                @endforeach
+                                            @endif
                                         </select>
+
+                                        @error('ddlCategoria')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
                                     </div>
                                 </div>
                             </div>
@@ -508,10 +562,44 @@
             </div>
 
         </form>
+
+        <div class="modal fade" id="ModalFoto" tabindex="-1" role="dialog" aria-labelledby="ModalFotoLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ModalFotoLabel"></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                            data-btn="btnCancelarFoto">Cancelar</button>
+                        <button type="button" class="btn btn-success" data-btn="btnGuardarFoto">Guardar
+                            fotografía</button>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
     @endif
 
 
 @endsection
+
+@section('js')
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
+    <script src="{{ asset('js/webcam.js') }}"></script>
+@endsection
+
 
 @section('script')
     <script type="text/javascript">
@@ -568,5 +656,205 @@
                 }
             })
         });
+
+
+        $(document).ready(function() {
+
+            $("[name='telefono_celular'],[name='telefono_celular']").attr({
+                pattern: '[1-9]{1}[0-9]{9}',
+                type: 'text',
+                title: '10 NUMEROS'
+            }); //validacion para numero de telefono
+            $("[name='telefono_oficina'],[name='telefono_oficina']").attr({
+                pattern: '[1-9]{1}[0-9]{9}',
+                type: 'text',
+                title: '10 NUMEROS'
+            }); //validacion para numero de telefono
+            $("[name='CodPostal']").attr({
+                pattern: '[0-9]{5}',
+                type: 'text',
+                title: '5 NUMEROS'
+            }); //codigo postal validacion
+            $("[name='curp']").attr({
+                pattern: '[A-Z]{4}[0-9]{6}[HM]{1}[A-Z]{5}[A-Z0-9]{1}[0-9]{1}',
+                type: 'text',
+                title: 'FORMATO DE CURP VALIDA'
+            }); //codigo postal validacion
+
+
+            // Add the following code if you want the name of the file appear on select
+            $(".custom-file-input").on("change", function() {
+                var fileName = $(this).val().split("\\").pop();
+                $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+            });
+
+            bsCustomFileInput.init();
+
+            $(document).on('click', '.btncamera', function() { //boton de camara
+                var namedoc = $(this).data('name');
+                Webcam.set({
+                    width: 640,
+                    height: 480,
+                    image_format: 'jpeg',
+                    jpeg_quality: 98
+                });
+                Webcam.reset('#camera');
+                Webcam.set("constraints", {
+                    facingMode: "environment"
+                });
+
+                $("#ModalFoto .modal-title").html('Tomar fotografía');
+                $("#ModalFoto .modal-dialog").addClass('modal-lg');
+                var htmlfoto = '<div id="camera" style="display:block;margin:auto;"></div>';
+                htmlfoto +=
+                    '<button id="take_photo" class="btn btn-primary btn-block mt-2 mb-2" type=button>Tomar fotografía</button>';
+                htmlfoto += '<div id="resultPhoto"></div>';
+
+
+                $("#ModalFoto .modal-body").html(htmlfoto);
+
+                $('#ModalFoto [data-btn="btnGuardarFoto"]').attr("disabled", true);
+
+                Webcam.attach('#camera');
+
+                $("#take_photo").off().click(function() { //solo captura la imagen
+                    Webcam.snap(function(data_uri) {
+                        $('#resultPhoto').html(
+                            '<img style="display:block;margin:auto;" src="' +
+                            data_uri + '"/>');
+                    });
+                    $('#ModalFoto [data-btn="btnGuardarFoto"]').removeAttr("disabled");
+                });
+
+                $('#ModalFoto [data-btn="btnGuardarFoto"]').off().click(
+                    function() { //guarda el base64 de la imagen en un hidden
+                        var imgbase64 = $('#resultPhoto img').attr('src');
+                        $('#' + namedoc).attr('type', 'hidden').removeClass('custom-file-input');
+                        $('#' + namedoc).val(imgbase64);
+                        $('#' + namedoc).next().removeClass('custom-file-label');
+                        $("#ModalFoto").modal('hide'); //se cierra el modal
+                        $("#ModalFoto .modal-dialog").removeClass('modal-lg');
+                    });
+
+                $("#ModalFoto").modal('show');
+            });
+
+
+        });
+
+
+
+        $('#ddlSector').off().change(function() {
+            var ddlSector = $(this);
+            if (ddlSector.val() == '') {
+                $('#ddlCategoria').prop('disabled', true);
+            } else {
+                $('#ddlCategoria').val('');
+                $('#ddlCategoria').prop('disabled', false);
+            }
+        });
+
+
+        $('#ddlEstado').off().change(function() {
+            var ddlEstado = $(this);
+            if (ddlEstado.val() == '') {
+                $('#ddlMunicipio').prop('disabled', true);
+                $('#ddlLocalidad').val('');
+                $('#ddlLocalidad').prop('disabled', true);
+            } else {
+                $('#ddlMunicipio').val('');
+                $('#ddlMunicipio').prop('disabled', false);
+                $('#ddlLocalidad').val('');
+                $('#ddlLocalidad').prop('disabled', true);
+            }
+        });
+
+
+        $('#ddlMunicipio').off().change(function() {
+            var ddlEstado = $('#ddlEstado');
+            var ddlMunicipio = $(this);
+            if (ddlEstado.val() == '' || ddlMunicipio.val() == '') {
+                $('#ddlLocalidad').prop('disabled', true);
+                $('#ddlLocalidad').prop('required', false);
+            } else {
+                $('#ddlLocalidad').val('');
+                $('#ddlLocalidad').prop('disabled', false);
+                $('#ddlLocalidad').prop('required', true);
+            }
+        });
+
+
+        const csrfToken = document.head.querySelector("[name~=csrf-token][content]").content;
+
+        //** OBTENER CATEGORIAS
+        document.getElementById('ddlSector').addEventListener('change', (e) => {
+            fetch('/obtenerCategorias', {
+                method: 'POST',
+                body: JSON.stringify({
+                    texto: e.target.value
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    "X-CSRF-Token": csrfToken
+                }
+            }).then(response => {
+                return response.json()
+            }).then(data => {
+                var opciones = "<option value=''>Seleccione una opción</option>";
+                for (let i in data.lista) {
+                    opciones += '<option value="' + data.lista[i].id + '">' + data.lista[i].name +
+                        '</option>';
+                }
+                document.getElementById("ddlCategoria").innerHTML = opciones;
+            }).catch(error => console.error(error));
+        })
+
+        //** OBTENER MUNICIPIOS
+        document.getElementById('ddlEstado').addEventListener('change', (e) => {
+            fetch('/obtenerMunicipios', {
+                method: 'POST',
+                body: JSON.stringify({
+                    texto: e.target.value
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    "X-CSRF-Token": csrfToken
+                }
+            }).then(response => {
+                return response.json()
+            }).then(data => {
+                var opciones = "<option value=''>Seleccione una opción</option>";
+                for (let i in data.lista) {
+                    opciones += '<option value="' + data.lista[i].cve_mun + '">' + data.lista[i].nom_mun +
+                        '</option>';
+                }
+                document.getElementById("ddlMunicipio").innerHTML = opciones;
+            }).catch(error => console.error(error));
+        })
+
+
+        //** OBTENER LOCALIDADES
+        document.getElementById('ddlMunicipio').addEventListener('change', (e) => {
+            var obj = {};
+            obj.cve_mun = e.target.value;
+            obj.cve_ent = document.getElementById("ddlEstado").value;
+            fetch('/obtenerLocalidades', {
+                method: 'POST',
+                body: JSON.stringify(obj),
+                headers: {
+                    'Content-Type': 'application/json',
+                    "X-CSRF-Token": csrfToken
+                }
+            }).then(response => {
+                return response.json()
+            }).then(data => {
+                var opciones = "<option value=''>Seleccione una opción</option>";
+                for (let i in data.lista) {
+                    opciones += '<option value="' + data.lista[i].cve_loc + '">' + data.lista[i].nom_loc +
+                        '</option>';
+                }
+                document.getElementById("ddlLocalidad").innerHTML = opciones;
+            }).catch(error => console.error(error));
+        })
     </script>
 @endsection

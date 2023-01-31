@@ -127,7 +127,7 @@ class QueriesController extends Controller
 
     /*******************************************************
      * 
-     * devuelve un listado de municipios para ser usado en dropdowns ajax
+     * devuelve los datos de un contacto para usarlo con ajax
      * 
      *******************************************************/
     public function obtenerContacto(Request $request)
@@ -226,18 +226,20 @@ class QueriesController extends Controller
             //return Redirect::back()->with('errormsg', 'Ha ocurrido un error al intentar actualizar el contacto, intente de nuevo.');
         }
 
-
-
-
-
-
-
-        // $url = str_replace('storage','public', $contacto->foto);
-        // Storage::delete($url);
-
-        //return response()->json($contacto, 200);
-
-        // $file->delete();
-        // return redirect()->route('admin.file.index');
     }
+
+
+    // elimina un contacto desde un datatable, se envía por ajax
+	public function borraContacto(Request $request) {
+		$id = $request->id;
+		$contacto = Contacto::find($id);
+
+        //borramos la foto
+        Storage::disk('public')->delete($contacto->foto);
+
+		//if (Storage::disk('public')->delete($contacto->foto)) {
+            //eliminamos el contacto
+			Contacto::destroy($id);
+		//}
+	}
 }

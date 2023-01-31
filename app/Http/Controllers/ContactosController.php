@@ -7,6 +7,8 @@ use App\Models\Categoria;
 use App\Models\Contacto;
 use App\Models\Partido;
 use App\Models\Estado;
+use App\Models\Localidad;
+use App\Models\Municipio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
@@ -88,7 +90,7 @@ class ContactosController extends Controller
             return Datatables::of($contactos)
                 ->addColumn('action', function ($row) {
 
-                    $html = '<a href="javascript:void(0)" class="btn btn-sm btn-success edit btnVer" data-id="' . $row->id . '"><i class="fa fa-eye mr-2"></i>Ver</a>  <a href="' . route('Contactos.Editar', $row->id) . '" class="btn btn-sm btn-primary btn-edit"><i class="fa fa-edit mr-2"></i>Editar</a>';
+                    $html = '<a href="javascript:void(0)" class="btn btn-sm btn-success edit btnVer" data-id="' . $row->id . '"><i class="fa fa-eye mr-2"></i>Ver</a>  <a href="' . route('Contactos.Editar', $row->id) . '" class="btn btn-sm btn-primary btn-edit"><i class="fa fa-edit mr-2"></i>Editar</a>  <a href="javascript:void(0)" class="btn btn-sm btn-danger btndelete" data-id="' . $row->id . '"><i class="fa fa-trash mr-2"></i>Eliminar</a>';
                     return $html;
                 })->make(true); //->toJson();
         }
@@ -265,10 +267,6 @@ class ContactosController extends Controller
      */
     public function edit($id)
     {
-        //obtenemos los catalogos
-        $sectores = Sector::all();
-        $partidos = Partido::all();
-        $estados = Estado::all();
 
         //buscamos el usuario
         $contacto = DB::table('contactos as cont')
@@ -326,7 +324,16 @@ class ContactosController extends Controller
             ->where('cont.id', '=', $id)
             ->first();
 
-        return view('contactos.editContacto', compact('contacto', 'sectores', 'partidos', 'estados'));
+        //obtenemos los catalogos
+        $sectores = Sector::all();
+        $categorias = Categoria::where('idSector', $contacto->idSector)->get();
+        $partidos = Partido::all();
+        $estados = Estado::all();
+        $municipios = Municipio::where('cve_ent', $contacto->cve_ent)->get();
+        $localidades = Localidad::where('cve_ent', $contacto->cve_ent)->where('cve_mun', $contacto->cve_mun)->get();
+
+
+        return view('contactos.editContacto', compact('contacto', 'sectores', 'categorias', 'partidos', 'estados', 'municipios', 'localidades'));
     }
 
     /**
@@ -341,10 +348,6 @@ class ContactosController extends Controller
         //validamos los campos
         //
         $fecha = Carbon::now();
-
-        //validamos los campos
-        //if (($request->hasFile('ContactoFile')) || ($request->has('ContactoFile'))) {
-
 
         //validamos si se tomó una foto
         if ($request->has('ContactoFile')) {
@@ -409,8 +412,6 @@ class ContactosController extends Controller
         //validamos si la imagen no se ha borrado
         if ($contacto->foto) {
 
-            dd($contacto->foto);
-
             Validator::make($request->all(), [
                 'ddlSector' => ['required', 'integer'],
                 'ddlCategoria' => ['required', 'integer'],
@@ -468,45 +469,39 @@ class ContactosController extends Controller
             $contacto->Observaciones = $request->get('Observaciones');
             $contacto->save();
 
-            //guardamos la foto o documento
-            $directorio = "contacto";
+            if (!$contacto->foto) {
 
-            if ($request->hasFile('ContactoFile')) {
-                $extension = strtolower($request->file('ContactoFile')->getClientOriginalExtension());
-                $request->file('ContactoFile')->storeAs($directorio, $contacto["id"] . '.' . $extension);
-                $imageName = $contacto["id"] . '.' . $extension;
-            } elseif ($request->has('ContactoFile')) {
-                $image = $request->get('ContactoFile');
-                $image = str_replace('data:image/jpeg;base64,', '', $image);
-                $image = str_replace(' ', '+', $image);
-                $imageName = $contacto["id"] . '.' . 'jpg';
-                Storage::disk('public')->put($directorio . "/" . $imageName, base64_decode($image));
+                //guardamos la foto o documento
+                $directorio = "contacto";
+
+                if ($request->hasFile('ContactoFile')) {
+                    $extension = strtolower($request->file('ContactoFile')->getClientOriginalExtension());
+                    $request->file('ContactoFile')->storeAs($directorio, $contacto["id"] . '.' . $extension);
+                    $imageName = $contacto["id"] . '.' . $extension;
+                } elseif ($request->has('ContactoFile')) {
+                    $image = $request->get('ContactoFile');
+                    $image = str_replace('data:image/jpeg;base64,', '', $image);
+                    $image = str_replace(' ', '+', $image);
+                    $imageName = $contacto["id"] . '.' . 'jpg';
+                    Storage::disk('public')->put($directorio . "/" . $imageName, base64_decode($image));
+                }
+
+                //actiualizamos la tabla con la ruta
+                $contactoFoto = Contacto::find($contacto["id"]);
+                $contactoFoto->Foto = $directorio . "/" . $imageName;
+                $contactoFoto->save();
             }
-
-            //actiualizamos la tabla con la ruta
-            $contactoFoto = Contacto::find($id["id"]);
-            $contactoFoto->Foto = $directorio . "/" . $imageName;
-            $contactoFoto->save();
-
             //* si no hay error en la transaccion hacemos commit y redireccionamos correctamente
             DB::commit();
             return redirect('/contactos')->with('scssmsg', 'Se ha guardado correctamente el contacto');
         } catch (\Exception $e) {
             //! en caso de error hacemos rollback y mandamos mensaje de error
             DB::rollBack();
-            return Redirect::back()->with('errormsg', 'Ha ocurrido un error al intentar actualizar el contacto, intente de nuevo.');
+            //'Ha ocurrido un error al intentar actualizar el contacto, intente de nuevo.' . 
+            return Redirect::back()->with('errormsg', $e->getMessage());
         }
         // }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+
 }

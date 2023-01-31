@@ -236,6 +236,61 @@
     <script type="text/javascript">
         $(document).ready(function() {
 
+
+            // delete employee ajax request
+            $(document).on('click', '.btndelete', function(e) {
+                e.preventDefault();
+                var id = $(this).data('id');
+                var csrf = '{{ csrf_token() }}';
+
+                Swal.fire({
+                    title: '¿Estás seguro de querer eliminar el contacto?',
+                    text: "¡No se podrá revertir!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '¡Si, eliminar!',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "{{ route('Queries.EliminaContacto') }}",
+                            method: 'delete',
+                            data: {
+                                id: id,
+                                _token: csrf
+                            },
+                            success: function(response) {
+                                console.log(response);
+                                 //regresa del borrado
+                                 Swal.fire({
+                                    position: 'top-end',
+                                    icon: 'success',
+                                    title: 'El contacto ha sido eliminada',
+                                    showConfirmButton: false,
+                                    timer: 5000
+                                })
+
+                                window.location.reload();
+                            },
+                            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: '¡Ha ocurrido un error al intentar eliminar el contacto!',
+                                    footer: '<p> Status:' + textStatus +
+                                        '</p><br><p> Error: ' + errorThrown +
+                                        '</p>'
+                                })
+                            }
+                        });
+                    }
+                })
+            });
+
+
+
             //*** MODAL ***//
 
             $(document).on('click', '.btnVer', function() {

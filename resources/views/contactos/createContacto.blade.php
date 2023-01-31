@@ -501,7 +501,7 @@
                 title: '10 NUMEROS'
             }); //validacion para numero de telefono
             $("[name='CodPostal']").attr({
-                pattern: '[7]{2}[0-9]{3}',
+                pattern: '[0-9]{5}',
                 type: 'text',
                 title: '5 NUMEROS'
             }); //codigo postal validacion
