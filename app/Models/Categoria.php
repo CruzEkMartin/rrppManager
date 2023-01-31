@@ -11,5 +11,5 @@ class Categoria extends Model
     protected $table = 'c_categorias';
 
     protected $fillable = [
-        'name', 'status',    ];
+        'name', 'status', 'idSector',   ];
 }

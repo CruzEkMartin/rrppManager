@@ -23,8 +23,7 @@ class PartidosController extends Controller
     public function index(Request $request)
     {
         //
-         //
-         if ($request->ajax()) {
+        if ($request->ajax()) {
 
             $partidos = DB::table('c_partidos')
                 ->select(
@@ -36,14 +35,11 @@ class PartidosController extends Controller
                 ->orderBy('id', 'ASC')
                 ->get();
 
-                //dd($sectores);
-
             return Datatables::of($partidos)
                 ->addColumn('action', function ($row) {
                     $html = '<a href="' . route('Partidos.Editar', $row->id) . '" class="btn btn-sm btn-primary btn-edit"><i class="fa fa-edit mr-2"></i>Editar</a> ';
-                    // $html .= '<button data-rowid="' . $row->id . '" class="btn btn-xs btn-danger btn-delete">Del</button>';
                     return $html;
-                })->make(true);//->toJson();
+                })->make(true); //->toJson();
         }
 
         return view('partidos.index');
@@ -71,9 +67,7 @@ class PartidosController extends Controller
         //
         //
         $fecha = Carbon::now();
-        // $fecha = $fecha->subHour(5);
-        //
-        //
+
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
             'siglas' => ['required', 'string', 'max:255'],
@@ -157,7 +151,6 @@ class PartidosController extends Controller
         try {
             DB::beginTransaction();
 
-            //$activo = Input::has('status') ? true : false;
             $partido = Partido::where('id', $id)->first();
             $partido->name = $request->get('name');
             $partido->siglas = $request->get('siglas');

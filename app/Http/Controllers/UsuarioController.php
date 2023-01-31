@@ -23,7 +23,7 @@ class UsuarioController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            //$usuarios = User::all();
+
             $usuarios = DB::table('users')
                 ->select(
                     'id',
@@ -39,9 +39,9 @@ class UsuarioController extends Controller
             return Datatables::of($usuarios)
                 ->addColumn('action', function ($row) {
                     $html = '<a href="' . route('Usuarios.Editar', $row->id) . '" class="btn btn-sm btn-primary btn-edit"><i class="fa fa-edit mr-2"></i>Editar</a> ';
-                    // $html .= '<button data-rowid="' . $row->id . '" class="btn btn-xs btn-danger btn-delete">Del</button>';
+
                     return $html;
-                })->make(true);//->toJson();
+                })->make(true); //->toJson();
         }
 
         return view('usuarios.index');
@@ -72,14 +72,12 @@ class UsuarioController extends Controller
     {
         //
         $fecha = Carbon::now();
-        // $fecha = $fecha->subHour(5);
-        //
-        //
+
         $validator = Validator::make($request->all(), [
 
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'phone' => ['required', 'regex:/^([0-9]{10})$/','min:10'],
+            'phone' => ['required', 'regex:/^([0-9]{10})$/', 'min:10'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'radio' => ['required', 'bool'],
         ]);
@@ -155,7 +153,7 @@ class UsuarioController extends Controller
         //
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'regex:/^([0-9]{10})$/','min:10'],
+            'phone' => ['required', 'regex:/^([0-9]{10})$/', 'min:10'],
             'radio' => ['required', 'bool'],
         ]);
 
@@ -167,8 +165,6 @@ class UsuarioController extends Controller
         //inicia la transaccion
         try {
             DB::beginTransaction();
-
-            //$activo = Input::has('status') ? true : false;
 
             $usuario = User::where('id', $id)->first();
             $usuario->name = $request->get('name');

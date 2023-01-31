@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Categoria;
+use App\Models\Sector;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -24,21 +25,22 @@ class CategoriasController extends Controller
         //
         if ($request->ajax()) {
 
-            $categorias = DB::table('c_categorias')
+            $categorias = DB::table('c_categorias as cat')
+                ->join('c_sectores as sec', 'sec.id', '=', 'cat.idSector')
                 ->select(
-                    'id',
-                    'name',
-                    DB::raw('(CASE status WHEN 0 THEN "INACTIVO" WHEN 1 THEN "ACTIVO" END) AS status'),
+                    'cat.id',
+                    'cat.name',
+                    DB::raw('(CASE cat.status WHEN 0 THEN "INACTIVO" WHEN 1 THEN "ACTIVO" END) AS status'),
+                    'sec.name as sector'
                 )
-                ->orderBy('id', 'DESC')
+                ->orderBy('cat.id', 'DESC')
                 ->get();
 
             return Datatables::of($categorias)
                 ->addColumn('action', function ($row) {
                     $html = '<a href="' . route('Categorias.Editar', $row->id) . '" class="btn btn-sm btn-primary btn-edit"><i class="fa fa-edit mr-2"></i>Editar</a> ';
-                    // $html .= '<button data-rowid="' . $row->id . '" class="btn btn-xs btn-danger btn-delete">Del</button>';
                     return $html;
-                })->make(true);//->toJson();
+                })->make(true); //->toJson();
         }
 
         return view('categorias.index');
@@ -51,8 +53,9 @@ class CategoriasController extends Controller
      */
     public function create()
     {
-        //
-        return view('categorias.createCategoria');
+        //visualizamos los sectores
+        $sectores = Sector::all();
+        return view('categorias.createCategoria', compact('sectores'));
     }
 
     /**
@@ -66,11 +69,10 @@ class CategoriasController extends Controller
         //
         //
         $fecha = Carbon::now();
-        // $fecha = $fecha->subHour(5);
-        //
-        //
+
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
+            'ddlSector' => ['required', 'integer'],
         ]);
 
         if ($validator->fails()) {
@@ -85,6 +87,7 @@ class CategoriasController extends Controller
             $categoria = new Categoria();
             $categoria->name = $request->get('name');
             $categoria->status = $request->has('status') ? "1" : "0";
+            $categoria->idSector = $request->get('ddlSector');
             $categoria->save();
             //si no hay error en la transaccion hacemos commit y redireccionamos correctamente
             DB::commit();
@@ -120,7 +123,9 @@ class CategoriasController extends Controller
         //
         $categoria = Categoria::find($id);
 
-        return view('categorias.editCategoria', compact('categoria'));
+        $sectores = Sector::all();
+
+        return view('categorias.editCategoria', compact('categoria', 'sectores'));
     }
 
     /**
@@ -139,6 +144,7 @@ class CategoriasController extends Controller
         //
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
+            'ddlSector' => ['required', 'integer'],
         ]);
 
 
@@ -150,10 +156,10 @@ class CategoriasController extends Controller
         try {
             DB::beginTransaction();
 
-            //$activo = Input::has('status') ? true : false;
             $categoria = Categoria::where('id', $id)->first();
             $categoria->name = $request->get('name');
             $categoria->status = $request->has('status') ? "1" : "0";
+            $categoria->idSector = $request->get('ddlSector');
             $categoria->save();
             //si no hay error en la transaccion hacemos commit y redireccionamos correctamente
             DB::commit();

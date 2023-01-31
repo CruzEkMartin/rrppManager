@@ -33,14 +33,12 @@ class SectoresController extends Controller
                 ->orderBy('id', 'DESC')
                 ->get();
 
-                //dd($sectores);
 
             return Datatables::of($sectores)
                 ->addColumn('action', function ($row) {
                     $html = '<a href="' . route('Sectores.Editar', $row->id) . '" class="btn btn-sm btn-primary btn-edit"><i class="fa fa-edit mr-2"></i>Editar</a> ';
-                    // $html .= '<button data-rowid="' . $row->id . '" class="btn btn-xs btn-danger btn-delete">Del</button>';
                     return $html;
-                })->make(true);//->toJson();
+                })->make(true); //->toJson();
         }
 
         return view('sectores.index');
@@ -67,9 +65,7 @@ class SectoresController extends Controller
     {
         //
         $fecha = Carbon::now();
-        // $fecha = $fecha->subHour(5);
-        //
-        //
+
         $validator = Validator::make($request->all(), [
             'name' => ['required', 'string', 'max:255'],
         ]);
@@ -134,7 +130,6 @@ class SectoresController extends Controller
     public function update(Request $request, $id)
     {
         //
-        
         $fecha = Carbon::now();
 
         //
@@ -151,7 +146,6 @@ class SectoresController extends Controller
         try {
             DB::beginTransaction();
 
-            //$activo = Input::has('status') ? true : false;
             $sector = Sector::where('id', $id)->first();
             $sector->name = $request->get('name');
             $sector->status = $request->has('status') ? "1" : "0";

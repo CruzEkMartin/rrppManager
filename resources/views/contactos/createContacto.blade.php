@@ -46,16 +46,12 @@
                             </div>
                         </div>
 
+
                         <div class="col-md-4">
                             <div class="input-group mb-3">
                                 <span class="input-group-text" id="lblCategoria">{{ __('Categoría') }}</span>
                                 <select id="ddlCategoria" name="ddlCategoria" aria-describedby="lblCategoria"
-                                    class="form-control" required>
-                                    <option value="" selected>Seleccione una opción</option>
-                                    @foreach ($categorias as $categoria)
-                                        <option value="{{ $categoria->id }}">{{ $categoria->name }}
-                                        </option>
-                                    @endforeach
+                                    class="form-control" disabled required>
                                 </select>
                             </div>
                         </div>
@@ -421,7 +417,7 @@
 
                     <div class="form-row mb-3">
 
-                        <div class="col-md-10">
+                        <div class="col-md-10 mb-3">
                             <div class="custom-file">
                                 <input type="file" class="custom-file-input" id="ContactoFile" name="ContactoFile"
                                     name="ContactoFile" accept="image/png, image/jpg, image/jpeg, application/pdf"
@@ -430,7 +426,7 @@
                                     archivo con la fotografía del contacto</label>
                             </div>
                         </div>
-                        <div class="col-md-2">
+                        <div class="col-md-2 mb-3">
                             <button data-name="ContactoFile" class="btn btn-success btncamera" type="button"
                                 aria-pressed="true"><span style="font-size: 1.2em; color: white;"
                                     class="fa fa-camera mr-2"></span>Tomar Fotografía</button>
@@ -494,10 +490,26 @@
     <script>
         $(document).ready(function() {
 
-            $("[name='telefono_celular'],[name='telefono_celular']").attr({pattern:'[1-9]{1}[0-9]{9}', type:'text', title:'10 NUMEROS'});//validacion para numero de telefono
-            $("[name='telefono_oficina'],[name='telefono_oficina']").attr({pattern:'[1-9]{1}[0-9]{9}', type:'text', title:'10 NUMEROS'});//validacion para numero de telefono
-			$("[name='CodPostal']").attr({pattern:'[7]{2}[0-9]{3}', type:'text', title:'5 NUMEROS'});//codigo postal validacion
-			$("[name='curp']").attr({pattern:'[A-Z]{4}[0-9]{6}[HM]{1}[A-Z]{5}[A-Z0-9]{1}[0-9]{1}', type:'text', title:'FORMATO DE CURP VALIDA'});//codigo postal validacion
+            $("[name='telefono_celular'],[name='telefono_celular']").attr({
+                pattern: '[1-9]{1}[0-9]{9}',
+                type: 'text',
+                title: '10 NUMEROS'
+            }); //validacion para numero de telefono
+            $("[name='telefono_oficina'],[name='telefono_oficina']").attr({
+                pattern: '[1-9]{1}[0-9]{9}',
+                type: 'text',
+                title: '10 NUMEROS'
+            }); //validacion para numero de telefono
+            $("[name='CodPostal']").attr({
+                pattern: '[0-9]{5}',
+                type: 'text',
+                title: '5 NUMEROS'
+            }); //codigo postal validacion
+            $("[name='curp']").attr({
+                pattern: '[A-Z]{4}[0-9]{6}[HM]{1}[A-Z]{5}[A-Z0-9]{1}[0-9]{1}',
+                type: 'text',
+                title: 'FORMATO DE CURP VALIDA'
+            }); //codigo postal validacion
 
 
             // Add the following code if you want the name of the file appear on select
@@ -509,7 +521,6 @@
             bsCustomFileInput.init();
 
             $(document).on('click', '.btncamera', function() { //boton de camara
-                // $(".btncamera").off().click(function(){//           
                 var namedoc = $(this).data('name');
                 Webcam.set({
                     width: 640,
@@ -523,8 +534,7 @@
                 });
 
                 $("#ModalFoto .modal-title").html('Tomar fotografía');
-                $("#ModalFoto .modal-dialog").addClass(
-                    'modal-lg'); //<<------------------------corregir de nuevo
+                $("#ModalFoto .modal-dialog").addClass('modal-lg');
                 var htmlfoto = '<div id="camera" style="display:block;margin:auto;"></div>';
                 htmlfoto +=
                     '<button id="take_photo" class="btn btn-primary btn-block mt-2 mb-2" type=button>Tomar fotografía</button>';
@@ -561,6 +571,16 @@
         });
 
 
+        $('#ddlSector').off().change(function() {
+            var ddlSector = $(this);
+            if (ddlSector.val() == '') {
+                $('#ddlCategoria').prop('disabled', true);
+            } else {
+                $('#ddlCategoria').val('');
+                $('#ddlCategoria').prop('disabled', false);
+            }
+        });
+
 
         $('#ddlEstado').off().change(function() {
             var ddlEstado = $(this);
@@ -593,6 +613,30 @@
 
         const csrfToken = document.head.querySelector("[name~=csrf-token][content]").content;
 
+        //** OBTENER CATEGORIAS
+        document.getElementById('ddlSector').addEventListener('change', (e) => {
+            fetch('/obtenerCategorias', {
+                method: 'POST',
+                body: JSON.stringify({
+                    texto: e.target.value
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    "X-CSRF-Token": csrfToken
+                }
+            }).then(response => {
+                return response.json()
+            }).then(data => {
+                var opciones = "<option value=''>Seleccione una opción</option>";
+                for (let i in data.lista) {
+                    opciones += '<option value="' + data.lista[i].id + '">' + data.lista[i].name +
+                        '</option>';
+                }
+                document.getElementById("ddlCategoria").innerHTML = opciones;
+            }).catch(error => console.error(error));
+        })
+
+        //** OBTENER MUNICIPIOS
         document.getElementById('ddlEstado').addEventListener('change', (e) => {
             fetch('/obtenerMunicipios', {
                 method: 'POST',
@@ -616,7 +660,7 @@
         })
 
 
-
+        //** OBTENER LOCALIDADES
         document.getElementById('ddlMunicipio').addEventListener('change', (e) => {
             var obj = {};
             obj.cve_mun = e.target.value;
