@@ -90,7 +90,13 @@ class ContactosController extends Controller
             return Datatables::of($contactos)
                 ->addColumn('action', function ($row) {
 
-                    $html = '<a href="javascript:void(0)" class="btn btn-sm btn-success edit btnVer" data-id="' . $row->id . '"><i class="fa fa-eye mr-2"></i>Ver</a>  <a href="' . route('Contactos.Editar', $row->id) . '" class="btn btn-sm btn-primary btn-edit"><i class="fa fa-edit mr-2"></i>Editar</a>  <a href="javascript:void(0)" class="btn btn-sm btn-danger btndelete" data-id="' . $row->id . '"><i class="fa fa-trash mr-2"></i>Eliminar</a>';
+                    if (Auth::user()->permiso == 0) {
+                        $html = '<a href="javascript:void(0)" class="btn btn-sm btn-success edit btnVer" data-id="' . $row->id . '"><i class="fa fa-eye mr-2"></i>Ver</a>  <a href="' . route('Contactos.Editar', $row->id) . '" class="btn btn-sm btn-primary btn-edit"><i class="fa fa-edit mr-2"></i>Editar</a>  <a href="javascript:void(0)" class="btn btn-sm btn-danger btndelete" data-id="' . $row->id . '"><i class="fa fa-trash mr-2"></i>Eliminar</a>';
+                    } elseif (Auth::user()->permiso == 1) {
+                        $html = '<a href="javascript:void(0)" class="btn btn-sm btn-success edit btnVer" data-id="' . $row->id . '"><i class="fa fa-eye mr-2"></i>Ver</a> ';
+                    }
+
+
                     return $html;
                 })->make(true); //->toJson();
         }
@@ -502,6 +508,4 @@ class ContactosController extends Controller
         }
         // }
     }
-
-
 }

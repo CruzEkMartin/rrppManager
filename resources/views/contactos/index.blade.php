@@ -2,6 +2,7 @@
 
 @section('css')
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap4.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.4.0/css/responsive.dataTables.min.css"/>
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.2/css/buttons.dataTables.min.css" />
 @endsection
 
@@ -27,21 +28,21 @@
 
         <div class="card">
             <div class="card-body">
-                <table class="table table-light table-striped table-hover " id="tbContactos">
+                <table class="table table-light table-striped table-hover responsive display nowrap" id="tbContactos" style="width:100%">
                     <thead class="table-dark">
                         <tr>
-                            <th>Id</th>
-                            <th>Titulo</th>
-                            <th>Nombre Completo</th>
-                            <th>Cargo</th>
-                            <th>Área</th>
-                            <th>Dependencia</th>
-                            <th>Fecha Nacimiento</th>
-                            <th>Teléfono Celular</th>
-                            <th>Teléfono Oficina</th>
-                            <th>Email Laboral</th>
-                            <th>Email Personal</th>
-                            <th>Acciones</th>
+                            <th data-priority="12">Id</th>
+                            <th data-priority="2">Titulo</th>
+                            <th data-priority="1">Nombre Completo</th>
+                            <th data-priority="4">Cargo</th>
+                            <th data-priority="5">Área</th>
+                            <th data-priority="6">Dependencia</th>
+                            <th data-priority="7">Fecha Nacimiento</th>
+                            <th data-priority="8">Teléfono Celular</th>
+                            <th data-priority="9">Teléfono Oficina</th>
+                            <th data-priority="10">Email Laboral</th>
+                            <th data-priority="11">Email Personal</th>
+                            <th data-priority="3">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -213,10 +214,13 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" data-btn="cnl"><i
                             class="fa fa-times-circle fa-lg mr-1"></i> Cerrar</button>
-                    <div class="btn-group mr-2" role="group">
-                        <a href="" id="editar" name="editar" class="btn btn-primary"><i
-                                class="fa fa-edit fa-lg mr-1"></i> Editar</a>
-                    </div>
+                    @if (Auth::user()->permiso == '0')
+                        <div class="btn-group mr-2" role="group">
+                            <a href="" id="editar" name="editar" class="btn btn-primary"><i
+                                    class="fa fa-edit fa-lg mr-1"></i> Editar</a>
+                        </div>
+                    @endif
+
                 </div>
             </div>
         </div>
@@ -229,6 +233,7 @@
     <script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/dataTables.bootstrap4.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.2/js/dataTables.buttons.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.html5.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
 @endsection
 
@@ -236,60 +241,60 @@
     <script type="text/javascript">
         $(document).ready(function() {
 
+            @if (Auth::user()->permiso == '0')
+                // delete employee ajax request
+                $(document).on('click', '.btndelete', function(e) {
+                    e.preventDefault();
+                    var id = $(this).data('id');
+                    var csrf = '{{ csrf_token() }}';
 
-            // delete employee ajax request
-            $(document).on('click', '.btndelete', function(e) {
-                e.preventDefault();
-                var id = $(this).data('id');
-                var csrf = '{{ csrf_token() }}';
+                    Swal.fire({
+                        title: '¿Estás seguro de querer eliminar el contacto?',
+                        text: "¡No se podrá revertir!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: '¡Si, eliminar!',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url: "{{ route('Queries.EliminaContacto') }}",
+                                method: 'delete',
+                                data: {
+                                    id: id,
+                                    _token: csrf
+                                },
+                                success: function(response) {
+                                    console.log(response);
+                                    //regresa del borrado
+                                    Swal.fire({
+                                        position: 'top-end',
+                                        icon: 'success',
+                                        title: 'El contacto ha sido eliminada',
+                                        showConfirmButton: false,
+                                        timer: 5000
+                                    })
 
-                Swal.fire({
-                    title: '¿Estás seguro de querer eliminar el contacto?',
-                    text: "¡No se podrá revertir!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: '¡Si, eliminar!',
-                    cancelButtonText: 'Cancelar'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            url: "{{ route('Queries.EliminaContacto') }}",
-                            method: 'delete',
-                            data: {
-                                id: id,
-                                _token: csrf
-                            },
-                            success: function(response) {
-                                console.log(response);
-                                 //regresa del borrado
-                                 Swal.fire({
-                                    position: 'top-end',
-                                    icon: 'success',
-                                    title: 'El contacto ha sido eliminada',
-                                    showConfirmButton: false,
-                                    timer: 5000
-                                })
-
-                                window.location.reload();
-                            },
-                            error: function(XMLHttpRequest, textStatus, errorThrown) {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Oops...',
-                                    text: '¡Ha ocurrido un error al intentar eliminar el contacto!',
-                                    footer: '<p> Status:' + textStatus +
-                                        '</p><br><p> Error: ' + errorThrown +
-                                        '</p>'
-                                })
-                            }
-                        });
-                    }
-                })
-            });
-
-
+                                    window.location.reload();
+                                },
+                                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: '¡Ha ocurrido un error al intentar eliminar el contacto!',
+                                        footer: '<p> Status:' + textStatus +
+                                            '</p><br><p> Error: ' +
+                                            errorThrown +
+                                            '</p>'
+                                    })
+                                }
+                            });
+                        }
+                    })
+                });
+            @endif
 
             //*** MODAL ***//
 
