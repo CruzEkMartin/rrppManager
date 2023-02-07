@@ -118,3 +118,19 @@
         </form>
     @endif
 @endsection
+
+
+
+@section('script')
+    <script>
+        $(document).ready(function() {
+
+            $("[name='phone'],[name='phone']").attr({
+                pattern: '[1-9]{1}[0-9]{9}',
+                type: 'text',
+                title: '10 NUMEROS'
+            }); //validacion para numero de telefono
+        });
+    </script>
+@endsection
+

@@ -250,7 +250,7 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
 
-                                    @if (Auth::user()->permiso == 0)
+                                    @if (Auth::user()->permiso == 0 || Auth::user()->permiso == 1)
                                         <h5 class="dropdown-header bg-secondary text-white">
                                             CONTACTOS
                                         </h5>
@@ -261,7 +261,8 @@
                                         <li>
                                             <hr class="dropdown-divider">
                                         </li>
-
+                                    @endif
+                                    @if (Auth::user()->permiso == 0)
                                         <h5 class="dropdown-header bg-secondary text-white">
                                             CATÁLOGOS
                                         </h5>
@@ -327,7 +328,6 @@
                 $(".HideAlert").remove();
             }, 5000);
         }
-
     </script>
 
 
