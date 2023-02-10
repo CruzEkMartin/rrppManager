@@ -102,4 +102,6 @@ Route::group(['namespace' => '\App\Http\Controllers'], function () {
     Route::post('/verContacto', 'QueriesController@obtenerContacto')->name('Queries.ObtenerContacto');
     Route::post('/borrarFotoContacto', 'QueriesController@borrarFotoContacto')->name('Queries.BorrarFotoContacto');
     Route::delete('/contactos/eliminar', 'QueriesController@borraContacto')->name('Queries.EliminaContacto');
+    Route::post('/contactos/estatus', 'QueriesController@statusContacto')->name('Queries.StatusContacto');
+
 });

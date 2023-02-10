@@ -51,9 +51,20 @@
 
                         {{-- datos --}}
                         <div class="col-md-9">
-                            {{-- sector, categoria --}}
+                            {{-- status, sector, categoria --}}
                             <div class="row">
-                                <div class="col-md-4">
+
+                                <div class="col-md-2">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text" id="estatus">Status: </span>
+                                        <input type="checkbox" aria-describedby="estatus" id="status" name="status"
+                                            data-toggle="toggle" data-onstyle="success" data-offstyle="secondary"
+                                            data-on="Activo" data-off="Inactivo" value="{{ $contacto->status }}"
+                                            @if ($contacto->status == 1) checked @endif>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-5">
                                     <div class="input-group mb-3">
                                         <span class="input-group-text" id="lblSector">{{ __('Sector') }}</span>
                                         <select id="ddlSector" name="ddlSector" aria-describedby="lblsector"
@@ -81,7 +92,7 @@
                                 </div>
 
 
-                                <div class="col-md-4">
+                                <div class="col-md-5">
                                     <div class="input-group mb-3">
                                         <span class="input-group-text" id="lblCategoria">{{ __('Categoría') }}</span>
                                         <select id="ddlCategoria" name="ddlCategoria" aria-describedby="lblCategoria"
@@ -90,7 +101,8 @@
                                             @if ($categorias)
                                                 @foreach ($categorias as $categoria)
                                                     @if ($categoria->id == $contacto->idCategoria)
-                                                        <option selected value="{{ $categoria->id }}">{{ $categoria->name }}
+                                                        <option selected value="{{ $categoria->id }}">
+                                                            {{ $categoria->name }}
                                                         </option>
                                                     @else
                                                         <option value="{{ $categoria->id }}">{{ $categoria->name }}
@@ -346,16 +358,18 @@
                                 <div class="col-md-4">
                                     <div class="input-group mb-3 ">
                                         <span class="input-group-text" id="lblMunicipio">{{ __('Municipio') }}</span>
-                                        <select id="ddlMunicipio" class="form-control" name="ddlMunicipio" 
-                                            required autofocus>
+                                        <select id="ddlMunicipio" class="form-control" name="ddlMunicipio" required
+                                            autofocus>
                                             <option value="" selected>Seleccione una opción</option>
                                             @if ($municipios)
                                                 @foreach ($municipios as $municipio)
                                                     @if ($municipio->cve_mun == $contacto->cve_mun)
-                                                        <option selected value="{{ $municipio->cve_mun }}">{{ $municipio->nom_mun }}
+                                                        <option selected value="{{ $municipio->cve_mun }}">
+                                                            {{ $municipio->nom_mun }}
                                                         </option>
                                                     @else
-                                                        <option value="{{ $municipio->cve_mun }}">{{ $municipio->nom_mun }}
+                                                        <option value="{{ $municipio->cve_mun }}">
+                                                            {{ $municipio->nom_mun }}
                                                         </option>
                                                     @endif
                                                 @endforeach
@@ -374,16 +388,17 @@
                                 <div class="col-md-4">
                                     <div class="input-group mb-3 ">
                                         <span class="input-group-text" id="lblLocalidad">{{ __('Localidad') }}</span>
-                                        <select id="ddlLocalidad" class="form-control" name="ddlLocalidad" 
-                                            required>
+                                        <select id="ddlLocalidad" class="form-control" name="ddlLocalidad" required>
                                             <option value="" selected>Seleccione una opción</option>
                                             @if ($localidades)
                                                 @foreach ($localidades as $localidad)
                                                     @if ($localidad->cve_loc == $contacto->cve_loc)
-                                                        <option selected value="{{ $localidad->cve_loc }}">{{ $localidad->nom_loc }}
+                                                        <option selected value="{{ $localidad->cve_loc }}">
+                                                            {{ $localidad->nom_loc }}
                                                         </option>
                                                     @else
-                                                        <option value="{{ $localidad->cve_loc }}">{{ $localidad->nom_loc }}
+                                                        <option value="{{ $localidad->cve_loc }}">
+                                                            {{ $localidad->nom_loc }}
                                                         </option>
                                                     @endif
                                                 @endforeach

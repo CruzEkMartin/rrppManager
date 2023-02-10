@@ -30,7 +30,66 @@ class ContactosController extends Controller
         //
         if ($request->ajax()) {
 
-            $contactos = DB::table('contactos as cont')
+            if (Auth::user()->permiso == 0) {
+                $contactos = DB::table('contactos as cont')
+                    ->join('users as us', 'us.id', '=', 'cont.idUsuario')
+                    ->join('c_sectores as sec', 'sec.id', '=', 'cont.idSector')
+                    ->join('c_categorias as cat', 'cat.id', '=', 'cont.idCategoria')
+                    ->join('c_estados as est', 'est.cve_ent', '=', 'cont.cve_ent')
+                    ->join('c_municipios as mun', function ($join) {
+                        $join->on('cont.cve_mun', '=', 'mun.cve_mun');
+                        $join->on('cont.cve_ent', '=', 'mun.cve_ent');
+                    })
+                    ->join('c_localidades as loc', function ($join2) {
+                        $join2->on('cont.cve_loc', '=', 'loc.cve_loc');
+                        $join2->on('cont.cve_mun', '=', 'loc.cve_mun');
+                        $join2->on('cont.cve_ent', '=', 'loc.cve_ent');
+                    })
+                    ->join('c_partidos as part', 'part.id', '=', 'cont.idPartido')
+                    ->select(
+                        'cont.id',
+                        'cont.idUsuario',
+                        'us.name as Usuario',
+                        'cont.idSector',
+                        'sec.name as Sector',
+                        'cont.idCategoria',
+                        'cat.name as Categoria',
+                        'cont.status AS idStatus',
+                        DB::raw('(CASE cont.status WHEN 1 THEN "ACTIVO" WHEN 0 THEN "INACTIVO" END) AS status'),
+                        'cont.genero',
+                        DB::raw('(CASE cont.genero WHEN 1 THEN "MASCULINO" WHEN 2 THEN "FEMENINO" END) AS sexo'),
+                        'cont.titulo',
+                        'cont.nombre',
+                        'cont.apellido_paterno',
+                        'cont.apellido_materno',
+                        DB::raw('CONCAT(cont.nombre, " ", cont.apellido_paterno, " ", cont.apellido_materno) as nombre_completo'),
+                        'cont.fecha_nacimiento',
+                        'cont.cargo',
+                        'cont.area',
+                        'cont.dependencia',
+                        'cont.telefono_celular',
+                        'cont.telefono_oficina',
+                        'cont.asistente',
+                        'cont.domicilio_laboral',
+                        'cont.codigo_postal',
+                        'cont.cve_ent',
+                        'est.nom_ent as Estado',
+                        'cont.cve_mun',
+                        'mun.nom_mun as Municipio',
+                        'cont.cve_loc',
+                        'loc.nom_loc as Localidad',
+                        'cont.email_laboral',
+                        'cont.email_personal',
+                        'cont.idPartido',
+                        'part.siglas as Partido',
+                        'cont.foto',
+                        'cont.observaciones',
+                    )
+                    ->orderBy('cont.id', 'DESC')
+                    ->get();
+            }
+            else{
+                $contactos = DB::table('contactos as cont')
                 ->join('users as us', 'us.id', '=', 'cont.idUsuario')
                 ->join('c_sectores as sec', 'sec.id', '=', 'cont.idSector')
                 ->join('c_categorias as cat', 'cat.id', '=', 'cont.idCategoria')
@@ -53,6 +112,8 @@ class ContactosController extends Controller
                     'sec.name as Sector',
                     'cont.idCategoria',
                     'cat.name as Categoria',
+                    'cont.status AS idStatus',
+                    DB::raw('(CASE cont.status WHEN 1 THEN "ACTIVO" WHEN 0 THEN "INACTIVO" END) AS status'),
                     'cont.genero',
                     DB::raw('(CASE cont.genero WHEN 1 THEN "MASCULINO" WHEN 2 THEN "FEMENINO" END) AS sexo'),
                     'cont.titulo',
@@ -82,17 +143,22 @@ class ContactosController extends Controller
                     'cont.foto',
                     'cont.observaciones',
                 )
+                ->where('cont.status','1')
                 ->orderBy('cont.id', 'DESC')
                 ->get();
-
-
+            }
 
             return Datatables::of($contactos)
                 ->addColumn('action', function ($row) {
 
                     if (Auth::user()->permiso == 0) {
-                        $html = '<a href="javascript:void(0)" class="btn btn-sm btn-success edit btnVer" data-id="' . $row->id . '"><i class="fa fa-eye mr-2"></i>Ver</a>  <a href="' . route('Contactos.Editar', $row->id) . '" class="btn btn-sm btn-primary btn-edit"><i class="fa fa-edit mr-2"></i>Editar</a>  <a href="javascript:void(0)" class="btn btn-sm btn-danger btndelete" data-id="' . $row->id . '"><i class="fa fa-trash mr-2"></i>Eliminar</a>';
-                    } elseif (Auth::user()->permiso == 1) {
+                        //$html = '<a href="javascript:void(0)" class="btn btn-sm btn-success edit btnVer" data-id="' . $row->id . '"><i class="fa fa-eye mr-2"></i>Ver</a>  <a href="' . route('Contactos.Editar', $row->id) . '" class="btn btn-sm btn-primary btn-edit"><i class="fa fa-edit mr-2"></i>Editar</a>  <a href="javascript:void(0)" class="btn btn-sm btn-danger btndelete" data-id="' . $row->id . '"><i class="fa fa-trash mr-2"></i>Eliminar</a>';
+                        if ($row->idStatus == 1) {
+                            $html = '<a href="javascript:void(0)" class="btn btn-sm btn-success edit btnVer" data-id="' . $row->id . '"><i class="fa fa-eye mr-2"></i>Ver</a>  <a href="' . route('Contactos.Editar', $row->id) . '" class="btn btn-sm btn-primary btn-edit"><i class="fa fa-edit mr-2"></i>Editar</a>  <a href="javascript:void(0)" class="btn btn-sm btn-danger btndelete" data-id="' . $row->id . '"><i class="fa fa-trash mr-2"></i>Eliminar</a>   <a href="javascript:void(0)" class="btn btn-sm btn-warning btnstatus" data-toggle="tooltip" data-placement="top" title="Cambiar Estatus" data-id="' . $row->id . '"><i class="fa fa-toggle-off mr-2"></i>Desactivar</a> ';
+                        } else {
+                            $html = '<a href="javascript:void(0)" class="btn btn-sm btn-success edit btnVer" data-id="' . $row->id . '"><i class="fa fa-eye mr-2"></i>Ver</a>  <a href="' . route('Contactos.Editar', $row->id) . '" class="btn btn-sm btn-primary btn-edit"><i class="fa fa-edit mr-2"></i>Editar</a>  <a href="javascript:void(0)" class="btn btn-sm btn-danger btndelete" data-id="' . $row->id . '"><i class="fa fa-trash mr-2"></i>Eliminar</a>    <a href="javascript:void(0)" class="btn btn-sm btn-info btnstatus" data-id="' . $row->id . '"><i class="fa fa-toggle-on mr-2"></i>Activar</a> ';
+                        }
+                    } else{
                         $html = '<a href="javascript:void(0)" class="btn btn-sm btn-success edit btnVer" data-id="' . $row->id . '"><i class="fa fa-eye mr-2"></i>Ver</a> ';
                     }
 
@@ -198,6 +264,7 @@ class ContactosController extends Controller
                 $contacto->idUsuario = (Auth::check()) ? Auth::user()->id : 0;
                 $contacto->idSector = $request->get('ddlSector');
                 $contacto->idCategoria = $request->get('ddlCategoria');
+                $contacto->status = "1";
                 $contacto->genero = $request->get('ddlSexo');
                 $contacto->titulo = $request->get('Titulo');
                 $contacto->nombre = $request->get('name');
@@ -298,6 +365,7 @@ class ContactosController extends Controller
                 'sec.name as Sector',
                 'cont.idCategoria',
                 'cat.name as Categoria',
+                'cont.status',
                 'cont.genero',
                 DB::raw('(CASE cont.genero WHEN 1 THEN "MASCULINO" WHEN 2 THEN "FEMENINO" END) AS sexo'),
                 'cont.titulo',
@@ -452,6 +520,7 @@ class ContactosController extends Controller
             $contacto->idUsuario = (Auth::check()) ? Auth::user()->id : 0;
             $contacto->idSector = $request->get('ddlSector');
             $contacto->idCategoria = $request->get('ddlCategoria');
+            $contacto->status = $request->has('status') ? "1" : "0";
             $contacto->genero = $request->get('ddlSexo');
             $contacto->titulo = $request->get('Titulo');
             $contacto->nombre = $request->get('name');

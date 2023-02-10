@@ -156,6 +156,8 @@ class QueriesController extends Controller
                 'sec.name as Sector',
                 'cont.idCategoria',
                 'cat.name as Categoria',
+                'cont.status AS idStatus',
+                DB::raw('(CASE cont.status WHEN 1 THEN "ACTIVO" WHEN 0 THEN "INACTIVO" END) AS status'),
                 'cont.genero',
                 DB::raw('(CASE cont.genero WHEN 1 THEN "MASCULINO" WHEN 2 THEN "FEMENINO" END) AS sexo'),
                 'cont.titulo',
@@ -225,21 +227,52 @@ class QueriesController extends Controller
             return response()->json(null, 200); //->with('errormsg', 'Ha ocurrido un error al intentar eliminar la fotografía, intente de nuevo.');
             //return Redirect::back()->with('errormsg', 'Ha ocurrido un error al intentar actualizar el contacto, intente de nuevo.');
         }
-
     }
 
 
     // elimina un contacto desde un datatable, se envía por ajax
-	public function borraContacto(Request $request) {
-		$id = $request->id;
-		$contacto = Contacto::find($id);
+    public function borraContacto(Request $request)
+    {
+        $id = $request->id;
+        $contacto = Contacto::find($id);
 
         //borramos la foto
         Storage::disk('public')->delete($contacto->foto);
 
-		//if (Storage::disk('public')->delete($contacto->foto)) {
-            //eliminamos el contacto
-			Contacto::destroy($id);
-		//}
-	}
+        //if (Storage::disk('public')->delete($contacto->foto)) {
+        //eliminamos el contacto
+        Contacto::destroy($id);
+        //}
+    }
+
+    // actualiza el status de un contacto desde un datatable, se envía por ajax
+    public function statusContacto(Request $request)
+    {
+        $id = $request->id;
+        $contacto = Contacto::find($id);
+
+        try {
+            DB::beginTransaction();
+
+            if ($contacto->status == 0) {
+                $contacto->status = 1;
+            } else {
+                $contacto->status = 0;
+            }
+
+            $contacto->save();
+
+            //* si no hay error en la transaccion hacemos commit y redireccionamos correctamente
+            DB::commit();
+
+            //return redirect('/contactos')->with('scssmsg', 'Se ha guardado correctamente el contacto');
+            return response()->json($contacto->id, 200); //->with('scssmsg', 'Se ha eliminado correctamente la fotografía');
+
+        } catch (\Exception $e) {
+            //! en caso de error hacemos rollback y mandamos mensaje de error
+            DB::rollBack();
+            return response()->json(null, 200); //->with('errormsg', 'Ha ocurrido un error al intentar eliminar la fotografía, intente de nuevo.');
+            //return Redirect::back()->with('errormsg', 'Ha ocurrido un error al intentar actualizar el contacto, intente de nuevo.');
+        }
+    }
 }

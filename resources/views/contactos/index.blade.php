@@ -31,18 +31,18 @@
                 <table class="table table-light table-striped table-hover responsive display nowrap" id="tbContactos" style="width:100%">
                     <thead class="table-dark">
                         <tr>
-                            <th data-priority="12">Id</th>
-                            <th data-priority="2">Titulo</th>
-                            <th data-priority="1">Nombre Completo</th>
-                            <th data-priority="4">Cargo</th>
-                            <th data-priority="5">Área</th>
-                            <th data-priority="6">Dependencia</th>
-                            <th data-priority="7">Fecha Nacimiento</th>
-                            <th data-priority="8">Teléfono Celular</th>
-                            <th data-priority="9">Teléfono Oficina</th>
-                            <th data-priority="10">Email Laboral</th>
-                            <th data-priority="11">Email Personal</th>
-                            <th data-priority="3">Acciones</th>
+                            <th class="text-center" data-priority="12">Id</th>
+                            <th class="text-center" data-priority="2">Titulo</th>
+                            <th class="text-center" data-priority="1">Nombre Completo</th>
+                            <th class="text-center" data-priority="4">Cargo</th>
+                            <th class="text-center" data-priority="5">Área</th>
+                            <th class="text-center" data-priority="6">Dependencia</th>
+                            <th class="text-center" data-priority="7">Fecha Nacimiento</th>
+                            <th class="text-center" data-priority="8">Teléfono Celular</th>
+                            <th class="text-center" data-priority="9">Teléfono Oficina</th>
+                            <th class="text-center" data-priority="10">Email Laboral</th>
+                            <th class="text-center" data-priority="11">Email Personal</th>
+                            <th class="text-center" data-priority="3">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -208,6 +208,18 @@
                                 </div>
                             </div>
 
+                            {{-- status --}}
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text" id="lblEstatus">{{ __('Estatus') }}</span>
+                                        <input id="status" name="status" type="text" class="form-control"
+                                            onkeyup="mayusculas(this);" readonly aria-label="Estatus"
+                                            aria-describedby="lblEstatus">
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -241,8 +253,8 @@
     <script type="text/javascript">
         $(document).ready(function() {
 
+            //borrar contacto
             @if (Auth::user()->permiso == '0')
-                // delete employee ajax request
                 $(document).on('click', '.btndelete', function(e) {
                     e.preventDefault();
                     var id = $(this).data('id');
@@ -296,6 +308,61 @@
                 });
             @endif
 
+
+            //Cambiar status
+            @if (Auth::user()->permiso == '0')
+                $(document).on('click', '.btnstatus', function(e) {
+                    e.preventDefault();
+                    var id = $(this).data('id');
+                    var csrf = '{{ csrf_token() }}';
+
+                    Swal.fire({
+                        title: '¿Estás seguro de querer cambiar el estatus de este contacto?',
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: '¡Confirmar!',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url: "{{ route('Queries.StatusContacto') }}",
+                                method: 'POST',
+                                data: {
+                                    id: id,
+                                    _token: csrf
+                                },
+                                success: function(response) {
+                                    console.log(response);
+                                    //regresa del borrado
+                                    Swal.fire({
+                                        position: 'top-end',
+                                        icon: 'success',
+                                        title: 'El estatus del contacto ha sido actualizado',
+                                        showConfirmButton: false,
+                                        timer: 5000
+                                    })
+
+                                    window.location.reload();
+                                },
+                                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Oops...',
+                                        text: '¡Ha ocurrido un error al intentar actualizar el estatus del contacto!',
+                                        footer: '<p> Status:' + textStatus +
+                                            '</p><br><p> Error: ' +
+                                            errorThrown +
+                                            '</p>'
+                                    })
+                                }
+                            });
+                        }
+                    })
+                });
+            @endif
+
             //*** MODAL ***//
 
             $(document).on('click', '.btnVer', function() {
@@ -330,6 +397,7 @@
                         $('#Estado').val(res.Estado);
                         $('#Municipio').val(res.Municipio);
                         $('#Localidad').val(res.Localidad);
+                        $('#status').val(res.status);
                         $('#editar').attr('href', '/contactos/editar/' + res.id);
                     }
                 });

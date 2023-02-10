@@ -14,6 +14,7 @@ class Contacto extends Model
                     'idUsuario',
                     'idSector',
                     'idCategoria',
+                    'status',
                     'genero',
                     'titulo',
                     'nombre',
