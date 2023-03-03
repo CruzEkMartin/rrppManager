@@ -149,7 +149,7 @@
                                 <div class="input-group-prepend">
                                     <label class="input-group-text" for="fecha_nac">Fecha de Nacimiento</label>
                                 </div>
-                                <input type="date" id="fecha_nac" name="fecha_nac" placeholder="dd/mm/aaaa"
+                                {{-- <input type="date" id="fecha_nac" name="fecha_nac" placeholder="dd/mm/aaaa"
                                     value="{{ old('fecha_nac') }}"
                                     class="form-control @error('fecha_nac') is-invalid @enderror" required />
 
@@ -157,7 +157,37 @@
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
+                                @enderror --}}
+                                <select id="year" name="yyyy" onchange="change_year(this)"
+                                    class="form-control @error('year') is-invalid @enderror" required>
+                                    <option value="" selected>Año</option>
+                                </select>
+                                @error('year')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
                                 @enderror
+
+                                <select id="month" name="mm" onchange="change_month(this)"
+                                    class="form-control @error('month') is-invalid @enderror" required>
+                                    <option value="" selected>Mes</option>
+                                </select>
+                                @error('month')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+
+                                <select id="day" name="dd"
+                                    class="form-control @error('day') is-invalid @enderror" required>
+                                    <option value="" selected>Día</option>
+                                </select>
+                                @error('day')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+
                             </div>
                         </div>
 
@@ -488,6 +518,8 @@
 
 @section('script')
     <script>
+        var Days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; // index => month [0-11]
+        var Months = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DEC'];
         $(document).ready(function() {
 
             $("[name='telefono_celular'],[name='telefono_celular']").attr({
@@ -512,7 +544,7 @@
             }); //codigo postal validacion
 
 
-            // Add the following code if you want the name of the file appear on select
+            // mostramos el nombre del archivo en el select
             $(".custom-file-input").on("change", function() {
                 var fileName = $(this).val().split("\\").pop();
                 $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
@@ -568,7 +600,88 @@
 
                 $("#ModalFoto").modal('show');
             });
+
+            
+            
+            var option="";
+            var selectedDay = "";
+            for (var i = 1; i <= Days[0]; i++) {
+                option += '<option value="' + i + '">' + i + "</option>";
+            }
+            $("#day").append(option);
+            $("#day").val(selectedDay);
+
+
+            var option="";
+            var selectedMon = "";
+            for (var i = 1; i <= 12; i++) {
+                option += '<option value="' + i + '">' + Months[i-1] + "</option>";
+            }
+            $("#month").append(option);
+            $("#month").val(selectedMon);
+
+            var d = new Date();
+            var option="";
+            selectedYear = "";
+            for (var i = 1920; i <= d.getFullYear(); i++) {
+                option += '<option value="' + i + '">' + i + "</option>";
+            }
+            $("#year").append(option);
+            $("#year").val(selectedYear);
         });
+
+        function isLeapYear(year) {
+            year = parseInt(year);
+            if (year % 4 != 0) {
+                return false;
+            } else if (year % 400 == 0) {
+                return true;
+            } else if (year % 100 == 0) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        function change_year(select) {
+            if (isLeapYear($(select).val())) {
+                Days[1] = 29;
+            } else {
+                Days[1] = 28;
+            }
+            if ($("#month").val() == 2) {
+                var day = $("#day");
+                var val = $(day).val();
+                $(day).empty();
+                var option = '<option value="" selected>Día</option>';
+                for (var i = 1; i <= Days[1]; i++) {
+                    //add option days
+                    option += '<option value="' + i + '">' + i + "</option>";
+                }
+                $(day).append(option);
+                if (val > Days[month]) {
+                    val = 1;
+                }
+                $(day).val(val);
+            }
+        }
+
+        function change_month(select) {
+            var day = $("#day");
+            var val = $(day).val();
+            $(day).empty();
+            var option = '<option value="" selected>Día</option>';
+            var month = parseInt($(select).val()) - 1;
+            for (var i = 1; i <= Days[month]; i++) {
+                //add option days
+                option += '<option value="' + i + '">' + i + "</option>";
+            }
+            $(day).append(option);
+            if (val > Days[month]) {
+                val = 1;
+            }
+            $(day).val(val);
+        }
 
 
         $('#ddlSector').off().change(function() {
